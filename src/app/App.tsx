@@ -1,11 +1,11 @@
-import { Box, Button,Container, Typography } from '@mui/material';
-import Stack from '@mui/material/Stack';
 import React from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
-
 import '../css/app.css'
-import { About } from './screens/About';
-import { Users } from './screens/Users';
+import { Box, Button,Container, Typography } from '@mui/material';
+import { Link, Route, Switch } from 'react-router-dom';
+import { HomePage } from './screens/homePage';
+import { ProductsPage } from './screens/productPage';
+import { OrdersPage } from './screens/ordersPage';
+import { UserPage } from './screens/userPage';
 
 function App() {
   return (
@@ -13,34 +13,37 @@ function App() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">HomePage</Link>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <Link to="/products">ProductsPage</Link>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <Link to="/orders">OrdersPage</Link>
+            </li>
+            <li>
+              <Link to="/member-page">UserPage</Link>
             </li>
           </ul>
         </nav>
 
         <Switch>
-          <Route path="/about">
-            <About />
+          <Route path="/products">
+            <ProductsPage />
           </Route>
-          <Route path="/users">
-            <Users />
+          <Route path="/orders">
+            <OrdersPage />
+          </Route>
+          <Route path="/member-page">
+            <UserPage />
           </Route>
           <Route path="/">
-            <Home />
+            <HomePage />
           </Route>
         </Switch>
       </div>
   );
 }
 
-function Home() {
-  return <Container>Home</Container>;
-}
 
 export default App;
