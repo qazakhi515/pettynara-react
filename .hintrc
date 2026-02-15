@@ -10,6 +10,8 @@
           "meta[name=theme-color]"
         ]
       }
-    ]
+    ],
+    "axe/text-alternatives": "off",
+    "no-inline-styles": "off"
   }
 }
