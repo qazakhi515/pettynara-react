@@ -63,10 +63,32 @@
   align-items: center;
 }
 
+.homepage .popular-dishes-frame .popular-section .category-title {
+  text-align: center;
+  font-family: "Roberto Serif";
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 1.44px;
+}
+
 .homepage .popular-dishes-frame .popular-section .cards-frame {
   width: 100%;
   margin-top: 43px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.homepage .popular-dishes-frame .cards-frame .card {
+  min-height: 430px;
+  min-width: 300px;
+  cursor: pointer;
+}
+
+.homepage .popular-dishes-frame .cards-frame .card .card-cover {
+  background:
+    linear-gradient(to top, rgba (0, 0, 0, 0.4), rgba (0, 0, 0, 0) 200px),
+    linear-gradient(to top rgba (0, 0, 0, 0.8), rgba (0, 0, 0, 0) 300px);
 }
