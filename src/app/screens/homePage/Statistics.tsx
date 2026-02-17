@@ -3,8 +3,8 @@ import React from "react";
 import Divider from "../../components/divider";
 export default function Statistics() {
   return (
-    <div>
-      <Container className={"static-frame"}>
+    <div className={"static-frame"}>
+      <Container>
         <Stack className={"info"}>
           <Stack className={"static-box"}>
             <Box className={"static-num"}>12</Box>
