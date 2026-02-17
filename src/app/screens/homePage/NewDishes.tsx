@@ -3,16 +3,16 @@ import { Box, Container, Stack } from "@mui/material";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
 import CardOverflow from "@mui/joy/CardOverflow";
+import Typography from "@mui/material/Typography";
 import { CssVarsProvider } from "@mui/joy/styles";
-import Typography from "@mui/joy/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Divider from "../../components/divider";
 
 const newDishes = [
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Donar", imagePath: "/img/donar.webp" },
+  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
   { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-  { productName: "Palov", imagePath: "/img/Uzbek-Palov.webp" },
+  { productName: "Kebab", imagePath: "/img/kebab.webp" },
+  { productName: "Lavash", imagePath: "/img/lavash.webp" },
 ];
 
 export default function NewDishes() {
@@ -41,7 +41,7 @@ export default function NewDishes() {
                               {ele.productName}
                             </Typography>
                             <Divider width="2" height="24" bg="#d9d9d9" />
-                            <Typography className={"price"}>12$</Typography>
+                            <Typography className={"price"}>$12</Typography>
                           </Stack>
                           <Stack>
                             <Typography className={"views"}>
@@ -57,7 +57,7 @@ export default function NewDishes() {
                   );
                 })
               ) : (
-                <Box className="no-data">New products are not available</Box>
+                <Box className="no-data">New Products are not available!</Box>
               )}
             </CssVarsProvider>
           </Stack>

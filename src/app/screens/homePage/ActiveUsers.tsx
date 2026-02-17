@@ -20,22 +20,21 @@ export default function ActiveUsers() {
           <Stack className={"cards-frame"}>
             <CssVarsProvider>
               {activeUsers.length !== 0 ? (
-                activeUsers.map((ele, index) => {
+                activeUsers.map((user, index) => {
                   return (
                     <Card key={index} variant="outlined" className={"card"}>
-                      <CardOverflow>
-                        <AspectRatio ratio="1">
-                          <img src={ele.imagePath} alt="" />
-                        </AspectRatio>
-                      </CardOverflow>
+                      <AspectRatio ratio="1">
+                        <img src={user.imagePath} alt="" />
+                      </AspectRatio>
 
-                      <CardOverflow variant="soft" className="member-nickname">
+                      <CardOverflow
+                        variant="soft"
+                        className="active-users-detail"
+                      >
                         <Stack className="info">
-                          <Stack flexDirection={"row"}>
-                            <Typography className={"title"}>
-                              {ele.productName}
-                            </Typography>
-                          </Stack>
+                          <Typography className={"member-nickname"}>
+                            {user.productName}
+                          </Typography>
                         </Stack>
                       </CardOverflow>
                     </Card>
