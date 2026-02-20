@@ -25,26 +25,15 @@ export default function Products() {
     <div className={"products"}>
       <Container>
         <Stack flexDirection={"column"} alignItems={"center"}>
-          <Stack className="avatar-big-box">
-            <p className="top-text">Burak Restaurant</p>
-            <div className="search-big-box">
-              <input
-                type="search"
-                className="single-search-input"
-                placeholder="Type here"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                endIcon={<SearchIcon />}
-                className="single-button-search"
-              >
-                Search
-              </Button>
+          <Stack className={"avatar-big-box"}>
+            <Box className="main-title">Burak Restaurant</Box>
+            <div className="main-input">
+              <input type="text" placeholder="Type here..." />
+              <button className="main-input-button">Search </button>
             </div>
           </Stack>
 
-          <Stack className={"dishes-filter-section"}>
+          <Stack className={"dishes-frame-section"}>
             <Stack className={"dishes-filter-box"}>
               <Button
                 variant={"contained"}
@@ -53,7 +42,6 @@ export default function Products() {
               >
                 New
               </Button>
-
               <Button
                 variant={"contained"}
                 color={"secondary"}
@@ -61,7 +49,6 @@ export default function Products() {
               >
                 Price
               </Button>
-
               <Button
                 variant={"contained"}
                 color={"secondary"}
@@ -71,6 +58,7 @@ export default function Products() {
               </Button>
             </Stack>
           </Stack>
+
           <Stack className={"list-category-section"}>
             <Stack className={"product-category"}>
               <div className={"category-main"}>
