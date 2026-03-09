@@ -11,7 +11,7 @@ export default function HomeNavbar() {
 
   useEffect(() => {
     console.log("componentDidMount"); // componentDidMount hosil
-    setCount(count + 1);
+    setCount(count + 2);
     return () => {
       console.log("componentWillUnmount"); //  componentWillUnmount hosil.  bu boshqa page ga otish ni amalga oshiradi
     };
