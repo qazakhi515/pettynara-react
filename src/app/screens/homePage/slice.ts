@@ -12,6 +12,7 @@ const homePageSlice = createSlice({
   initialState,
   reducers: {
     setPopularDishes: (state, action) => {
+      /// action
       state.popularDishes = action.payload;
     },
     setNewDishes: (state, action) => {
@@ -23,8 +24,11 @@ const homePageSlice = createSlice({
   },
 });
 
-export const { setNewDishes, setPopularDishes, setTopUsers } =
-  homePageSlice.actions;
+export const {
+  setNewDishes,
+  setPopularDishes,
+  setTopUsers,
+} = homePageSlice.actions; // set newDishes va setPopularDishes bular action xisobllanadi .
 
 const HomePageReducer = homePageSlice.reducer;
 export default HomePageReducer;
