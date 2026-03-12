@@ -24,11 +24,8 @@ const homePageSlice = createSlice({
   },
 });
 
-export const {
-  setNewDishes,
-  setPopularDishes,
-  setTopUsers,
-} = homePageSlice.actions; // set newDishes va setPopularDishes bular action xisobllanadi .
+export const { setNewDishes, setPopularDishes, setTopUsers } =
+  homePageSlice.actions; // set newDishes va setPopularDishes bular action xisobllanadi .
 
 const HomePageReducer = homePageSlice.reducer;
 export default HomePageReducer;
