@@ -6,11 +6,8 @@ import { CssVarsProvider } from "@mui/joy/styles";
 import Typography from "@mui/joy/Typography";
 
 import { useSelector } from "react-redux";
-import { Dispatch } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 import { retrieveTopUsers } from "./selector";
-import { setTopUsers } from "./slice"; // bular bizni actionlarimiz
-import { Product } from "../../../lib/types/product";
 import { serverApi } from "../../../lib/config";
 import { Member } from "../../../lib/types/member";
 
@@ -36,7 +33,7 @@ export default function ActiveUsers() {
                       className={"card"}
                     >
                       <AspectRatio ratio="1">
-                        <img src={member.memberImage} alt="" />
+                        <img src={imagePath} alt="" />
                       </AspectRatio>
 
                       <CardOverflow
