@@ -89,7 +89,7 @@ export default function Products() {
         <Stack flexDirection={"column"} alignItems={"center"}>
           <Stack className={"avatar-big-box"}>
             <Box className="main-title">Burak Restaurant</Box>
-            <div className="main-input">
+            <div className="mclain-input">
               <input
                 type="text"
                 placeholder="Type here..."
