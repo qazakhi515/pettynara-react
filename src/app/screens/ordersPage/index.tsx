@@ -15,6 +15,7 @@ import "../../../css/order.css";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import OrderService from "../../services/OrdersService";
+import { useGlobals } from "../../components/hooks/useGlobals";
 
 //** redux slice and selector **//
 
@@ -24,6 +25,7 @@ const actionDispatch = (dispatch: Dispatch) => ({
   setFinishedOrders: (data: Order[]) => dispatch(setFinishedOrders(data)),
 });
 export default function OrdersPage() {
+  const { orderBuilder } = useGlobals();
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
   const [value, setValue] = useState("1");
@@ -50,7 +52,7 @@ export default function OrdersPage() {
       .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.FINISH })
       .then((data) => setFinishedOrders(data))
       .catch((err) => console.log(err));
-  }, [orderInquiry]);
+  }, [orderInquiry, orderBuilder]);
 
   const handleChange = (e: SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -79,11 +81,11 @@ export default function OrdersPage() {
 
             <Stack className={"order-main-content"}>
               <TabPanel value="1" sx={{ p: 0 }}>
-                <PausedOrders />
+                <PausedOrders setValue={setValue} />
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: 0 }}>
-                <ProcessOrders />
+                <ProcessOrders setValue={setValue} />
               </TabPanel>
 
               <TabPanel value="3" sx={{ p: 0 }}>
