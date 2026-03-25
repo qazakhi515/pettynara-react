@@ -10,16 +10,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import DescriptionOutlined from "@mui/icons-material/DescriptionOutlined";
 
 import { useSelector } from "react-redux";
-import { Dispatch } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 import { retrievePopularDishes } from "./selector";
-import { setPopularDishes } from "./slice"; // bular bizni actionlarimiz
 import { Product } from "../../../lib/types/product";
 import { serverApi } from "../../../lib/config";
 
-const actionDispatch = (dispatch: Dispatch) => ({
-  setPopularDishes: (data: Product[]) => dispatch(setPopularDishes(data)),
-});
 const popularDishesRetriever = createSelector(
   retrievePopularDishes,
   (popularDishes) => ({ popularDishes }),
