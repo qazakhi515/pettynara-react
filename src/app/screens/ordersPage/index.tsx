@@ -16,6 +16,7 @@ import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import OrderService from "../../services/OrdersService";
 import { useGlobals } from "../../components/hooks/useGlobals";
+import { useHistory } from "react-router-dom";
 
 //** redux slice and selector **//
 
@@ -25,9 +26,10 @@ const actionDispatch = (dispatch: Dispatch) => ({
   setFinishedOrders: (data: Order[]) => dispatch(setFinishedOrders(data)),
 });
 export default function OrdersPage() {
-  const { orderBuilder } = useGlobals();
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
+  const { orderBuilder, authMember } = useGlobals();
+  const history = useHistory();
   const [value, setValue] = useState("1");
   const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
     page: 1,

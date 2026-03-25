@@ -1,11 +1,30 @@
 import { serverApi } from "../../lib/config";
 import axios from "axios";
 import { Product, ProductInquiry } from "../../lib/types/product";
-import { LoginInput, Member, MemberInput } from "../../lib/types/member";
+import {
+  LoginInput,
+  Member,
+  MemberInput,
+  MemberUpdateInput,
+} from "../../lib/types/member";
 class MemberService {
-  private readonly path: string;
-  constructor() {
-    this.path = serverApi;
+  path: any;
+  public async updateMember(
+    memberUpdateInput: MemberUpdateInput,
+  ): Promise<Member> {
+    try {
+      const url = `${this.path}/member/update`;
+
+      const result = await axios.post(url, memberUpdateInput, {
+        withCredentials: true,
+      });
+
+      console.log("updateMember:", result);
+      return result.data;
+    } catch (err) {
+      console.log("Error. updateMember:", err);
+      throw err;
+    }
   }
 
   public async getTopUsers(): Promise<Member[]> {

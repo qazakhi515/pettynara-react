@@ -64,6 +64,7 @@ export default function PausedOrders(props: PausedOrdersProps) {
       if (confirmation) {
         const order = new OrderService();
         await order.updateOrder(input);
+        setValue("2");
         setOrderBuilder(new Date());
       }
     } catch (err) {
