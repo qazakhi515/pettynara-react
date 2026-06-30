@@ -13,19 +13,19 @@ const CATEGORIES: Category[] = [
     key: "dog",
     name: "Dogs",
     collection: ProductCollection.DOG,
-    image: "/img/home/dogs.webp",
+    image: "/img/itButton.png",
   },
   {
     key: "cat",
     name: "Cats",
     collection: ProductCollection.CAT,
-    image: "/img/home/cats.webp",
+    image: "/img/mushukButton.png",
   },
   {
     key: "bird",
     name: "Birds",
     collection: ProductCollection.BIRD,
-    image: "/img/home/birds.webp",
+    image: "/img/birdButton.png",
   },
   {
     key: "fish",
@@ -37,13 +37,13 @@ const CATEGORIES: Category[] = [
     key: "rabbit",
     name: "Rabbits",
     collection: ProductCollection.RABBIT,
-    image: "/img/home/rabbits.webp",
+    image: "/img/rabbitButton.png",
   },
   {
     key: "accessory",
     name: "Accessories",
     collection: ProductCollection.ACCESSORY,
-    image: "/img/home/accessories.webp",
+    image: "/img/AcButton.png",
   },
 ];
 
