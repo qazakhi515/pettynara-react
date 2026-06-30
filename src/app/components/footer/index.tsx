@@ -1,89 +1,76 @@
 import React from "react";
-import { Box, Container, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
-const Footers = styled.div`
-  width: 100%;
-  height: 590px;
-  display: flex;
-  background: #343434;
-  background-size: cover;
-`;
+const TRUST = [
+  { icon: "🛡️", title: "Safe Adoption", desc: "Verified listings & careful screening." },
+  { icon: "✅", title: "Verified Helpers", desc: "Background checked & rated." },
+  { icon: "⭐", title: "Review System", desc: "Real reviews from real users." },
+  { icon: "💚", title: "Smart Matching", desc: "The best fit, every time." },
+];
 
 export default function Footer() {
-  const authMember = null;
-
   return (
-    <Footers>
-      <Container>
-        <Stack flexDirection={"row"} sx={{ mt: "94px" }}>
-          <Stack flexDirection={"column"} style={{ width: "340px" }}>
-            <Box>
-              <img width={"100px"} src={"/icons/burak.svg"} />
-            </Box>
-            <Box className={"foot-desc-txt"}>
-              Focusing on the gourmet Turkish breakfast as well as the youth
-              society, CZN Burak Gurme aims to bring Turkish cuisine back. CZN
-              Burak Gurme creates an illusion with its cuisine.
-            </Box>
-            <Box className="sns-context">
-              <img src={"/icons/facebook.svg"} />
-              <img src={"/icons/twitter.svg"} />
-              <img src={"/icons/instagram.svg"} />
-              <img src={"/icons/youtube.svg"} />
-            </Box>
-          </Stack>
-          <Stack sx={{ ml: "288px" }} flexDirection={"row"}>
-            <Stack>
-              <Box>
-                <Box className={"foot-category-title"}>Bo'limlar</Box>
-                <Box className={"foot-category-link"}>
-                  <Link to="/">Home</Link>
-                  <Link to="/products">Products</Link>
-                  {authMember && <Link to="/orders">Orders</Link>}
-                  <Link to="/help">Help</Link>
-                </Box>
-              </Box>
-            </Stack>
-            <Stack sx={{ ml: "100px" }}>
-              <Box>
-                <Box className={"foot-category-title"}>Find us</Box>
-                <Box
-                  flexDirection={"column"}
-                  sx={{ mt: "20px" }}
-                  className={"foot-category-link"}
-                  justifyContent={"space-between"}
-                >
-                  <Box flexDirection={"row"} className={"find-us"}>
-                    <span>L.</span>
-                    <div>Downtown, Dubai</div>
-                  </Box>
-                  <Box className={"find-us"}>
-                    <span>P.</span>
-                    <div>+971 4 554 7777</div>
-                  </Box>
-                  <Box className={"find-us"}>
-                    <span>E.</span>
-                    <div>devexuz@gmail.com</div>
-                  </Box>
-                  <Box className={"find-us"}>
-                    <span>H.</span>
-                    <div>Visit 24 hours</div>
-                  </Box>
-                </Box>
-              </Box>
-            </Stack>
-          </Stack>
-        </Stack>
-        <Stack
-          style={{ border: "1px solid #C5C8C9", width: "100%", opacity: "0.2" }}
-          sx={{ mt: "80px" }}
-        ></Stack>
-        <Stack className={"copyright-txt"}>
-          © Copyright Devex Global, All rights reserved.
-        </Stack>
-      </Container>
-    </Footers>
+    <footer className="pettynara-footer">
+      {/* trust strip — short text/badges only, not a route */}
+      <div className="ph-container">
+        <div className="foot-trust">
+          {TRUST.map((t) => (
+            <div key={t.title} className="trust-item">
+              <span className="trust-ico" role="img" aria-label={t.title}>
+                {t.icon}
+              </span>
+              <div>
+                <div className="trust-title">{t.title}</div>
+                <div className="trust-desc">{t.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="foot-main">
+          <div className="foot-brand">
+            <div className="foot-logo">
+              <span className="brand-mark" role="img" aria-label="Pettynara">
+                🐶
+              </span>
+              <span className="brand-name">Pettynara</span>
+            </div>
+            <p className="foot-desc">
+              A Korean-friendly pet marketplace. Meet your next tiny family —
+              pets, helpers, and trusted items in one happy place.
+            </p>
+          </div>
+
+          <div className="foot-col">
+            <div className="foot-col-title">Explore</div>
+            <Link to="/">Home</Link>
+            <Link to="/products?collection=DOG">Dogs</Link>
+            <Link to="/products?collection=CAT">Cats</Link>
+            <Link to="/helpers">Helpers</Link>
+          </div>
+
+          <div className="foot-col">
+            <div className="foot-col-title">Find us</div>
+            <div className="foot-find">
+              <span>L.</span> Gangnam-gu, Seoul, Korea
+            </div>
+            <div className="foot-find">
+              <span>P.</span> +82 2 1234 5678
+            </div>
+            <div className="foot-find">
+              <span>E.</span> support@pettynara.com
+            </div>
+            <div className="foot-find">
+              <span>H.</span> Support 09:00 – 21:00 KST
+            </div>
+          </div>
+        </div>
+
+        <div className="foot-bottom">
+          © {new Date().getFullYear()} Pettynara. Adoption, not shopping — give
+          love, save a life.
+        </div>
+      </div>
+    </footer>
   );
 }

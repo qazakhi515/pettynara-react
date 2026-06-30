@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import Hero from "./Hero";
 import CategoryRow from "./CategoryRow";
+import PetHelpers from "./PetHelpers";
+import PopularPets from "./PopularPets";
+import Accessories from "./Accessories";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setNewDishes, setPopularDishes, setTopUsers } from "./slice";
@@ -58,6 +61,9 @@ export default function HomePage() {
     <div className={"pettynara-home"}>
       <Hero />
       <CategoryRow />
+      <PetHelpers />
+      <PopularPets />
+      <Accessories />
     </div>
   );
 }

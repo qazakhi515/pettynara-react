@@ -1,3 +1,8 @@
 {
-  "name": "Burak"
+  "short_name": "Pettynara",
+  "name": "Pettynara — Pet Marketplace",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1f9d76",
+  "background_color": "#ffffff"
 }

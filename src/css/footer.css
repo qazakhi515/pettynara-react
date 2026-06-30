@@ -1,94 +1,158 @@
-.foot-desc-txt {
-  margin-top: 22px;
+/* ===== Pettynara footer (global) ===== */
+.pettynara-footer {
+  width: 100%;
+  background: linear-gradient(180deg, #f1f9f4 0%, #fff8ef 100%);
+  border-top: 1px solid #e6efe9;
+  padding: 40px 0 28px;
   font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 34px;
-  color: #e3c08d;
+  color: #233028;
 }
 
-.sns-context {
-  margin-top: 17px;
-  width: 137px;
+.pettynara-footer .ph-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* trust strip */
+.foot-trust {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #eef2ef;
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 36px;
+  box-shadow: 0 8px 22px rgba(31, 157, 118, 0.06);
+}
+
+.trust-item {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
-.foot-category-title {
-  width: 106px;
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 600;
+.trust-ico {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f6ef;
+  border-radius: 12px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.trust-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #233028;
+}
+
+.trust-desc {
+  font-size: 12px;
+  color: #5b6b62;
+}
+
+/* main columns */
+.foot-main {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.2fr;
+  gap: 30px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #e2ece6;
+}
+
+.foot-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.foot-logo .brand-mark {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f6ef;
+  border-radius: 14px;
   font-size: 24px;
-  line-height: 34px;
-  color: #c5c8c9;
 }
 
-.foot-category-link {
-  margin-top: 20px;
-  height: 170px;
+.foot-logo .brand-name {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  color: #1f9d76;
+}
+
+.foot-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 24px;
+  color: #5b6b62;
+  max-width: 360px;
+}
+
+.foot-col {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 170px;
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
+  gap: 12px;
+}
+
+.foot-col-title {
   font-size: 16px;
-  line-height: 34px;
-}
-
-.foot-category-link a {
-  color: #e3c08d;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.find-us {
-  display: flex;
-  flex-direction: row;
-}
-
-.find-us span {
-  font-family: "Poppins";
-  font-style: normal;
   font-weight: 700;
-  font-size: 18px;
-  line-height: 34px;
-  color: #c5c8c9;
+  color: #233028;
+  margin-bottom: 4px;
 }
 
-.find-us div {
-  margin-left: 10px;
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 34px;
-  color: #e3c08d;
+.foot-col a {
+  font-size: 14px;
+  color: #4f6157;
+  text-decoration: none;
 }
 
-.copyright-txt {
-  margin-top: 17px;
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 34px;
-  color: #e3c08d;
+.foot-col a:hover {
+  color: #1f9d76;
 }
 
-.foot-category-title:after {
-  display: block;
-  content: "";
-  border-bottom: solid 2px #d7b686;
-  transform: scaleX(0);
-  transition: transform 250ms ease-in-out;
-  transform-origin: 0% 50%;
+.foot-find {
+  font-size: 14px;
+  color: #4f6157;
 }
 
-.foot-category-title:hover:after {
-  transform: scaleX(1);
+.foot-find span {
+  font-weight: 700;
+  color: #1f9d76;
+  margin-right: 8px;
+}
+
+.foot-bottom {
+  padding-top: 18px;
+  font-size: 13px;
+  color: #7a8a81;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .foot-trust {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .foot-main {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .foot-trust,
+  .foot-main {
+    grid-template-columns: 1fr;
+  }
 }
