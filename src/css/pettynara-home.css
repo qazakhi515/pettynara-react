@@ -1,0 +1,474 @@
+/* ============================================================
+   Pettynara homepage — hero, smart search, category row
+   Palette: mint #1f9d76 / coral #ff6f50 / cream #fff8f0
+   ============================================================ */
+
+.pettynara-home {
+  width: 100%;
+  background: #ffffff;
+  font-family: "Poppins";
+  color: #233028;
+}
+
+.pettynara-home .ph-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.pettynara-home .ph-section-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.pettynara-home .ph-section-head h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #233028;
+}
+
+.pettynara-home .ph-viewall {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f9d76;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ===== Hero ===== */
+.pet-hero {
+  width: 100%;
+  background: linear-gradient(180deg, #fff8ef 0%, #f1f9f4 100%);
+  padding: 40px 0 56px;
+}
+
+.pet-hero-inner {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.hero-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-title {
+  margin: 6px 0 10px;
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #233028;
+}
+
+.hero-title span {
+  color: #1f9d76;
+}
+
+.hero-title .deco {
+  font-size: 30px;
+  font-style: normal;
+  margin-left: 6px;
+}
+
+.hero-sub {
+  margin: 0 0 18px;
+  font-size: 17px;
+  color: #5b6b62;
+  max-width: 420px;
+}
+
+.hero-visual {
+  position: relative;
+  height: 250px;
+  border-radius: 22px;
+  overflow: visible;
+  margin-bottom: 18px;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 14px 34px rgba(31, 157, 118, 0.16);
+}
+
+.hero-visual .deco {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 50%;
+  font-size: 22px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.hero-visual .d1 {
+  top: -14px;
+  left: -10px;
+}
+.hero-visual .d2 {
+  top: 30px;
+  right: -12px;
+  background: #fff4d6;
+}
+.hero-visual .d3 {
+  bottom: -12px;
+  left: 36%;
+  background: #fde9c8;
+}
+.hero-visual .d4 {
+  bottom: 24px;
+  left: -14px;
+  background: #fde0d6;
+}
+
+/* hero search card */
+.hero-search {
+  margin-top: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(31, 157, 118, 0.1);
+}
+
+.hs-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hs-tabs button {
+  flex: 1;
+  border: none;
+  background: #f3f6f4;
+  color: #5b6b62;
+  padding: 10px 0;
+  border-radius: 12px;
+  font-family: "Poppins";
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.hs-tabs button.active {
+  background: #1f9d76;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(31, 157, 118, 0.25);
+}
+
+.hs-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hs-loc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #e4ebe7;
+  background: #fafcfb;
+  border-radius: 12px;
+  padding: 0 12px;
+  height: 46px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #3a4a42;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hs-row input {
+  flex: 1;
+  height: 46px;
+  border: 1px solid #e4ebe7;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-family: "Poppins";
+  font-size: 15px;
+  outline: none;
+}
+
+.hs-row input:focus {
+  border-color: #1f9d76;
+}
+
+.hs-smart {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 46px;
+  border: none;
+  background: #ff6f50;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 0 18px;
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(255, 111, 80, 0.28);
+}
+
+.hs-smart:hover {
+  background: #f25c3c;
+}
+
+.hs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.hs-chips span {
+  font-size: 13px;
+  color: #5b6b62;
+  background: #f3f6f4;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.hs-chips span.lead {
+  color: #1f9d76;
+  background: #e7f6ef;
+  font-weight: 600;
+}
+
+/* ===== Smart search card ===== */
+.smart-card {
+  background: #e9f7f0;
+  border: 1px solid #d6eee2;
+  border-radius: 22px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sc-head {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.sc-head .sc-spark {
+  font-size: 18px;
+}
+
+.sc-head h3 {
+  margin: 2px 0 4px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f9d76;
+}
+
+.sc-head p {
+  margin: 0;
+  font-size: 14px;
+  color: #4f6157;
+}
+
+.sc-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.sc-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.sc-step .sc-ico {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 14px;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 160ms ease;
+}
+
+.sc-step.active .sc-ico,
+.sc-step.done .sc-ico {
+  border-color: #1f9d76;
+}
+
+.sc-step .sc-lbl {
+  font-size: 11px;
+  color: #5b6b62;
+  text-align: center;
+}
+
+.sc-question {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  min-height: 110px;
+}
+
+.sc-question .sc-q {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #233028;
+}
+
+.sc-answers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sc-answers button {
+  border: 1px solid #d6eee2;
+  background: #f4fbf7;
+  color: #2c6b54;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: "Poppins";
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.sc-answers button:hover,
+.sc-answers button.picked {
+  background: #1f9d76;
+  color: #ffffff;
+  border-color: #1f9d76;
+}
+
+.sc-start {
+  margin-top: auto;
+  border: none;
+  background: #1f9d76;
+  color: #ffffff;
+  border-radius: 14px;
+  height: 50px;
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(31, 157, 118, 0.25);
+}
+
+.sc-start:hover {
+  background: #178a67;
+}
+
+/* ===== Category row ===== */
+.pet-category {
+  padding: 40px 0 10px;
+}
+
+.cat-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.cat-card {
+  border: 1px solid #eef2ef;
+  border-radius: 18px;
+  padding: 12px;
+  background: #ffffff;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.cat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(31, 157, 118, 0.14);
+}
+
+.cat-thumb {
+  width: 100%;
+  height: 110px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 10px;
+}
+
+.cat-card .cat-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #233028;
+}
+
+/* soft pastel tints per card */
+.cat-card.c-dog .cat-thumb {
+  background-color: #eef6ff;
+}
+.cat-card.c-cat .cat-thumb {
+  background-color: #fdeef4;
+}
+.cat-card.c-bird .cat-thumb {
+  background-color: #eafaf0;
+}
+.cat-card.c-fish .cat-thumb {
+  background-color: #e8f5fb;
+}
+.cat-card.c-rabbit .cat-thumb {
+  background-color: #fff3e6;
+}
+.cat-card.c-accessory .cat-thumb {
+  background-color: #f3f0fb;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1100px) {
+  .pet-hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .cat-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 38px;
+  }
+  .hs-row {
+    flex-wrap: wrap;
+  }
+  .cat-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

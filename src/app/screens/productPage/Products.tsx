@@ -39,7 +39,7 @@ export default function Products(props: ProductsProps) {
     page: 1,
     limit: 8,
     order: "createdAt",
-    productCollection: ProductCollection.DISH,
+    productCollection: ProductCollection.DOG,
     search: " ",
   });
   const [searchText, setSearchText] = useState<string>("");
@@ -159,68 +159,73 @@ export default function Products(props: ProductsProps) {
                 <Button
                   variant={"contained"}
                   color={
-                    productSearch.productCollection === ProductCollection.OTHER
+                    productSearch.productCollection === ProductCollection.DOG
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => searchCollectionHandler(ProductCollection.DOG)}
+                >
+                  Dogs
+                </Button>
+                <Button
+                  variant={"contained"}
+                  color={
+                    productSearch.productCollection === ProductCollection.CAT
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => searchCollectionHandler(ProductCollection.CAT)}
+                >
+                  Cats
+                </Button>
+                <Button
+                  variant={"contained"}
+                  color={
+                    productSearch.productCollection === ProductCollection.BIRD
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => searchCollectionHandler(ProductCollection.BIRD)}
+                >
+                  Birds
+                </Button>
+                <Button
+                  variant={"contained"}
+                  color={
+                    productSearch.productCollection === ProductCollection.FISH
+                      ? "primary"
+                      : "secondary"
+                  }
+                  onClick={() => searchCollectionHandler(ProductCollection.FISH)}
+                >
+                  Fish
+                </Button>
+                <Button
+                  variant={"contained"}
+                  color={
+                    productSearch.productCollection === ProductCollection.RABBIT
                       ? "primary"
                       : "secondary"
                   }
                   onClick={() =>
-                    searchCollectionHandler(ProductCollection.OTHER)
+                    searchCollectionHandler(ProductCollection.RABBIT)
                   }
                 >
-                  Other
+                  Rabbits
                 </Button>
                 <Button
                   variant={"contained"}
                   color={
                     productSearch.productCollection ===
-                    ProductCollection.DESSERT
+                    ProductCollection.ACCESSORY
                       ? "primary"
                       : "secondary"
                   }
                   onClick={() =>
-                    searchCollectionHandler(ProductCollection.DESSERT)
+                    searchCollectionHandler(ProductCollection.ACCESSORY)
                   }
                 >
-                  Dessert
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.DRINK
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() =>
-                    searchCollectionHandler(ProductCollection.DRINK)
-                  }
-                >
-                  Drink
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.SALAD
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() =>
-                    searchCollectionHandler(ProductCollection.SALAD)
-                  }
-                >
-                  Salad
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.DISH
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() =>
-                    searchCollectionHandler(ProductCollection.DISH)
-                  }
-                >
-                  Dish
+                  Accessories
                 </Button>
               </div>
             </Stack>
@@ -229,7 +234,7 @@ export default function Products(props: ProductsProps) {
                 products.map((product, index) => {
                   const imagePath = `${serverApi}/${product.productImages[0]}`;
                   const sizeVolume =
-                    product.productCollection === ProductCollection.DRINK
+                    product.productCollection === ProductCollection.ACCESSORY
                       ? product.productVolume + " litre"
                       : product.productSize + " size";
                   return (
