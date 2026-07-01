@@ -1,15 +1,16 @@
 import { useHistory } from "react-router-dom";
+import "../../../css/pettynara-helpers.css";
 
 /**
- * Pet Helpers — isolated local mock data.
- * Replace this array with a PetHelperService call when the backend is ready;
- * the card layout below does not need to change.
+ * Pet Helpers home section — isolated local mock data.
+ * Uses the same modern card as the /helpers page.
  */
 interface Helper {
   _id: string;
   name: string;
   specialty: string;
   experience: string;
+  location: string;
   message: string;
   animals: string[];
   rating: number;
@@ -24,7 +25,8 @@ const MOCK_HELPERS: Helper[] = [
     name: "Jiyeon Kim",
     specialty: "Dog Care Specialist",
     experience: "3 yrs experience",
-    message: "Loving daily care for your pup.",
+    location: "Seoul, Korea",
+    message: "Loving daily care and walks for your pup.",
     animals: ["Dogs", "Puppies"],
     rating: 5.0,
     reviews: 128,
@@ -36,7 +38,8 @@ const MOCK_HELPERS: Helper[] = [
     name: "Minho Park",
     specialty: "Cat Care Specialist",
     experience: "4 yrs experience",
-    message: "Calm, gentle handling for cats.",
+    location: "Seoul, Korea",
+    message: "Calm, gentle handling for shy cats.",
     animals: ["Cats", "Kittens"],
     rating: 5.0,
     reviews: 98,
@@ -48,7 +51,8 @@ const MOCK_HELPERS: Helper[] = [
     name: "Soojin Lee",
     specialty: "Small Animals Helper",
     experience: "2 yrs experience",
-    message: "Friendly care for tiny friends.",
+    location: "Incheon, Korea",
+    message: "Friendly care for rabbits and tiny friends.",
     animals: ["Rabbits", "Guinea Pigs"],
     rating: 4.9,
     reviews: 76,
@@ -60,7 +64,8 @@ const MOCK_HELPERS: Helper[] = [
     name: "Hyunwoo Choi",
     specialty: "Bird Care Helper",
     experience: "3 yrs experience",
-    message: "Patient care for feathered pets.",
+    location: "Busan, Korea",
+    message: "Patient care for parrots and songbirds.",
     animals: ["Birds", "Parrots"],
     rating: 4.9,
     reviews: 76,
@@ -85,31 +90,44 @@ export default function PetHelpers() {
         </div>
 
         <div className="helper-row">
-          {MOCK_HELPERS.map((helper) => (
-            <div key={helper._id} className="helper-card">
-              <div className="helper-top">
-                <img
-                  className="helper-photo"
-                  src={helper.image}
-                  alt={helper.name}
-                />
-                {helper.verified ? (
-                  <span className="helper-badge" title="Verified helper">
-                    ✓
+          {MOCK_HELPERS.map((h) => (
+            <div key={h._id} className="helper-page-card">
+              <div className="hpc-top">
+                <img className="hpc-photo" src={h.image} alt={h.name} />
+                {h.verified ? (
+                  <span className="hpc-badge" title="Verified helper">
+                    ✓ Verified
                   </span>
                 ) : null}
               </div>
-              <div className="helper-name">{helper.name}</div>
-              <div className="helper-spec">{helper.specialty}</div>
-              <div className="helper-exp">{helper.experience}</div>
-              <div className="helper-tags">
-                {helper.animals.map((a) => (
-                  <span key={a}>{a}</span>
-                ))}
-              </div>
-              <div className="helper-rating">
-                <span role="img" aria-label="star">⭐</span> {helper.rating.toFixed(1)}{" "}
-                <em>({helper.reviews})</em>
+
+              <div className="hpc-body">
+                <div className="hpc-name">{h.name}</div>
+                <div className="hpc-spec">{h.specialty}</div>
+                <div className="hpc-sub">
+                  {h.experience} · 📍 {h.location}
+                </div>
+
+                <p className="hpc-message">“{h.message}”</p>
+
+                <div className="hpc-tags">
+                  {h.animals.map((a) => (
+                    <span key={a}>{a}</span>
+                  ))}
+                </div>
+
+                <div className="hpc-foot">
+                  <div className="hpc-rating">
+                    <span role="img" aria-label="star">⭐</span>{" "}
+                    {h.rating.toFixed(1)} <em>({h.reviews})</em>
+                  </div>
+                  <button
+                    className="hpc-contact"
+                    onClick={() => history.push("/helpers")}
+                  >
+                    Contact
+                  </button>
+                </div>
               </div>
             </div>
           ))}

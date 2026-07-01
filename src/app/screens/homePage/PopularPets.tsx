@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { useHistory } from "react-router-dom";
 import { retrievePopularDishes } from "./selector";
 import { Product } from "../../../lib/types/product";
 import { serverApi } from "../../../lib/config";
+import FavoriteButton from "../../components/favorite/FavoriteButton";
 
 const popularRetriever = createSelector(
   retrievePopularDishes,
@@ -22,6 +22,17 @@ interface PetCard {
   productId?: string;
 }
 
+// Friendly species label; unknown/legacy values (OTHER, DESSERT...) -> "Pet"
+const SPECIES_LABEL: Record<string, string> = {
+  DOG: "Dog",
+  CAT: "Cat",
+  BIRD: "Bird",
+  FISH: "Fish",
+  RABBIT: "Rabbit",
+  ACCESSORY: "Accessory",
+};
+const speciesLabel = (c: string): string => SPECIES_LABEL[c] ?? "Pet";
+
 /** Local fallback shown until the backend serves DOG/CAT/... products. */
 const MOCK_PETS: PetCard[] = [
   { _id: "p1", name: "Golden Retriever", meta: "Male • 2 months", location: "Seoul, Korea", views: 1200, image: "/img/home/pet1.webp", flag: "Free" },
@@ -34,14 +45,6 @@ const MOCK_PETS: PetCard[] = [
 export default function PopularPets() {
   const { popularDishes } = useSelector(popularRetriever);
   const history = useHistory();
-  const [favorites, setFavorites] = useState<string[]>([]);
-
-  const toggleFavorite = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  };
 
   // Prefer real backend data; fall back to local cards when empty.
   const cards: PetCard[] =
@@ -50,10 +53,12 @@ export default function PopularPets() {
           _id: pet._id,
           productId: pet._id,
           name: pet.productName,
-          meta: pet.productCollection,
+          meta: speciesLabel(pet.productCollection),
           location: "Korea",
           views: pet.productViews,
-          image: `${serverApi}/${pet.productImages[0]}`,
+          image: pet.productImages?.[0]
+            ? `${serverApi}/${pet.productImages[0]}`
+            : "/img/home/pet1.webp",
           flag: "Verified",
         }))
       : MOCK_PETS;
@@ -76,7 +81,6 @@ export default function PopularPets() {
 
         <div className="pet-row">
           {cards.map((pet) => {
-            const isFav = favorites.includes(pet._id);
             return (
               <div
                 key={pet._id}
@@ -88,13 +92,7 @@ export default function PopularPets() {
                   style={{ backgroundImage: `url(${pet.image})` }}
                 >
                   <span className="pet-flag">{pet.flag}</span>
-                  <button
-                    className={"pet-fav" + (isFav ? " on" : "")}
-                    onClick={(e) => toggleFavorite(e, pet._id)}
-                    aria-label="favorite"
-                  >
-                    {isFav ? "❤️" : "🤍"}
-                  </button>
+                  <FavoriteButton id={pet._id} className="pet-fav" />
                 </div>
                 <div className="pet-body">
                   <div className="pet-name">{pet.name}</div>

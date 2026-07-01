@@ -1,50 +1,90 @@
 import { useState } from "react";
-import { Container } from "@mui/material";
+import {
+  Answers,
+  computeMatches,
+  MatchResult,
+} from "./smartMatch";
 
 const SEARCH_TABS = ["Pets", "Items", "Helpers"];
-const FILTER_CHIPS = ["All Animals", "Age", "Size", "Gender", "Price", "More filters"];
+const FILTER_CHIPS = [
+  "All Animals",
+  "Age",
+  "Size",
+  "Gender",
+  "Price",
+  "More filters",
+];
 
-// Korean Smart Search flow (UI-only / local state)
-const SMART_STEPS = [
+type StepKey = keyof Answers;
+interface Step {
+  key: StepKey;
+  icon: string;
+  label: string;
+  question: string;
+  options: { v: string; t: string }[];
+}
+
+const STEPS: Step[] = [
   {
+    key: "home",
     icon: "🏠",
-    label: "Home type",
+    label: "Home",
     question: "어떤 집에 살고 있나요?",
-    answers: ["아파트", "단독주택"],
+    options: [
+      { v: "apartment", t: "아파트" },
+      { v: "house", t: "단독주택" },
+    ],
   },
   {
+    key: "exp",
     icon: "⭐",
     label: "Experience",
     question: "반려동물 경험이 있나요?",
-    answers: ["처음이에요", "경험 있어요"],
+    options: [
+      { v: "first", t: "처음이에요" },
+      { v: "experienced", t: "경험 있어요" },
+    ],
   },
   {
+    key: "time",
     icon: "⏰",
     label: "Time",
     question: "하루에 돌볼 수 있는 시간은?",
-    answers: ["짧아요", "충분해요"],
+    options: [
+      { v: "low", t: "짧아요" },
+      { v: "enough", t: "충분해요" },
+    ],
   },
   {
+    key: "allergy",
     icon: "🌿",
-    label: "Allergies",
+    label: "Allergy",
     question: "알레르기가 있나요?",
-    answers: ["네", "아니요"],
+    options: [
+      { v: "yes", t: "있어요" },
+      { v: "no", t: "없어요" },
+    ],
   },
   {
+    key: "energy",
     icon: "💚",
     label: "Personality",
-    question: "어떤 성격의 친구를 원하나요?",
-    answers: ["조용한 친구", "활발한 친구"],
+    question: "어떤 성격을 원하나요?",
+    options: [
+      { v: "calm", t: "조용한 친구" },
+      { v: "active", t: "활발한 친구" },
+    ],
   },
 ];
 
 export default function Hero() {
   const [activeTab, setActiveTab] = useState<string>("Pets");
   const [searchText, setSearchText] = useState<string>("");
-  const [step, setStep] = useState<number>(0);
-  const [picked, setPicked] = useState<(string | null)[]>(
-    Array(SMART_STEPS.length).fill(null)
-  );
+
+  // Smart Match state
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Answers>({});
+  const [results, setResults] = useState<MatchResult[] | null>(null);
 
   const scrollToSmart = () => {
     document
@@ -52,47 +92,40 @@ export default function Hero() {
       ?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const pickAnswer = (answer: string) => {
-    const next = [...picked];
-    next[step] = answer;
-    setPicked(next);
-    if (step < SMART_STEPS.length - 1) setStep(step + 1);
+  const allAnswered = STEPS.every((s) => answers[s.key]);
+  const current = STEPS[step];
+
+  const pick = (key: StepKey, value: string) => {
+    setAnswers((prev) => ({ ...prev, [key]: value }));
+    if (step < STEPS.length - 1) setStep(step + 1);
   };
 
-  const current = SMART_STEPS[step];
+  const startMatching = () => setResults(computeMatches(answers));
+  const reset = () => {
+    setAnswers({});
+    setStep(0);
+    setResults(null);
+  };
 
   return (
     <section className="pet-hero">
-      <Container className="pet-hero-inner" disableGutters>
-        {/* ---- left: copy + search ---- */}
+      <div className="pet-hero-head">
+        <h1 className="hero-title">
+          Meet your <span>next tiny family</span>
+          <em className="deco">🐾</em>
+        </h1>
+        <p className="hero-sub">
+          Search pets, helpers, and trusted items in one happy place.
+        </p>
+      </div>
+      <div className="pet-hero-inner">
+        {/* ---- left: photo + search ---- */}
         <div className="hero-main">
-          <div className="hero-head">
-            <h1 className="hero-title">
-              Meet your <span>next tiny family</span>
-              <em className="deco">🐾</em>
-            </h1>
-            <p className="hero-sub">
-              Search pets, helpers, and trusted items in one happy place.
-            </p>
-          </div>
-
           <div className="hero-visual">
             <div
               className="hero-photo"
-              style={{ backgroundImage: "url(/img/home/hero-pets.webp)" }}
+              style={{ backgroundImage: "url(/img/heroPage.png)" }}
             />
-            <span className="deco d1" role="img" aria-label="love">
-              ❤️
-            </span>
-            <span className="deco d2" role="img" aria-label="star">
-              ⭐
-            </span>
-            <span className="deco d3" role="img" aria-label="chick">
-              🐥
-            </span>
-            <span className="deco d4" role="img" aria-label="smile">
-              😊
-            </span>
           </div>
 
           <div className="hero-search">
@@ -131,52 +164,122 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ---- right: Korean Smart Search card ---- */}
+        {/* ---- right: Smart Match ---- */}
         <aside className="smart-card" id="smart-search">
           <div className="sc-head">
-            <div className="sc-spark" role="img" aria-label="sparkle">
-              ✨
-            </div>
-            <h3>Smart Search</h3>
+            <h3>
+              <span className="sc-spark" role="img" aria-label="sparkle">
+                ✨
+              </span>{" "}
+              Smart Match
+            </h3>
             <p>나에게 맞는 반려동물 찾기</p>
           </div>
 
+          {/* progress icons */}
           <div className="sc-steps">
-            {SMART_STEPS.map((s, i) => (
-              <div
-                key={s.label}
+            {STEPS.map((s, i) => (
+              <button
+                key={s.key}
                 className={
                   "sc-step" +
-                  (i === step ? " active" : "") +
-                  (picked[i] ? " done" : "")
+                  (i === step && !results ? " active" : "") +
+                  (answers[s.key] ? " done" : "")
                 }
+                onClick={() => !results && setStep(i)}
+                title={s.label}
               >
-                <div className="sc-ico">{s.icon}</div>
-                <div className="sc-lbl">{s.label}</div>
-              </div>
+                <span className="sc-ico">{s.icon}</span>
+              </button>
             ))}
           </div>
 
-          <div className="sc-question">
-            <p className="sc-q">{current.question}</p>
-            <div className="sc-answers">
-              {current.answers.map((a) => (
-                <button
-                  key={a}
-                  className={picked[step] === a ? "picked" : ""}
-                  onClick={() => pickAnswer(a)}
-                >
-                  {a}
-                </button>
-              ))}
-            </div>
-          </div>
+          {!results ? (
+            <>
+              {/* one question per screen */}
+              <div className="sc-question">
+                <div className="sc-qtop">
+                  <span className="sc-qcount">
+                    {step + 1} / {STEPS.length}
+                  </span>
+                  {step > 0 ? (
+                    <button
+                      className="sc-back"
+                      onClick={() => setStep(step - 1)}
+                    >
+                      ‹ Back
+                    </button>
+                  ) : null}
+                </div>
+                <p className="sc-q">{current.question}</p>
+                <div className="sc-answers">
+                  {current.options.map((o) => (
+                    <button
+                      key={o.v}
+                      className={
+                        answers[current.key] === o.v ? "picked" : ""
+                      }
+                      onClick={() => pick(current.key, o.v)}
+                    >
+                      {o.t}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <button className="sc-start" onClick={() => setStep(0)}>
-            스마트 매칭 시작
-          </button>
+              <button
+                className="sc-start"
+                disabled={!allAnswered}
+                onClick={startMatching}
+              >
+                스마트 매칭 시작
+              </button>
+            </>
+          ) : (
+            /* results */
+            <div className="sc-results">
+              {results.length === 0 ? (
+                <div className="sc-noresult">
+                  No perfect match found — try adjusting your answers.
+                </div>
+              ) : (
+                results.map((m, i) => (
+                  <div key={m.name} className="sc-match">
+                    <div
+                      className="sc-match-photo"
+                      style={{ backgroundImage: `url(${m.image})` }}
+                    >
+                      <span className="sc-rank">#{i + 1}</span>
+                    </div>
+                    <div className="sc-match-body">
+                      <div className="sc-match-top">
+                        <span className="sc-match-name">{m.name}</span>
+                        <span className="sc-score">{m.score}</span>
+                      </div>
+                      <span className="sc-match-label">{m.label}</span>
+                      <div className="sc-reasons">
+                        {m.reasons.map((r) => (
+                          <span key={r} className="sc-reason">
+                            ✓ {r}
+                          </span>
+                        ))}
+                        {m.cautions.map((c) => (
+                          <span key={c} className="sc-caution">
+                            ! {c}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+              <button className="sc-start ghost" onClick={reset}>
+                다시 하기
+              </button>
+            </div>
+          )}
         </aside>
-      </Container>
+      </div>
     </section>
   );
 }

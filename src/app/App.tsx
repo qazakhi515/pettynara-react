@@ -9,6 +9,7 @@ import HomeNavbar from "./components/headers/HomeNavbar";
 import OtherNavbar from "./components/headers/OtherNavbar";
 import Footer from "./components/footer";
 import HelpPage from "./screens/helpPage";
+import HelpersPage from "./screens/helpersPage";
 import Test from "./screens/Test";
 import useBasket from "./components/hooks/useBasket";
 import AuthenticationModal from "./components/auth";
@@ -90,6 +91,9 @@ function App() {
         </Route>
         <Route path="/member-page">
           <UserPage />
+        </Route>
+        <Route path="/helpers">
+          <HelpersPage />
         </Route>
         <Route path="/help">
           <HelpPage />

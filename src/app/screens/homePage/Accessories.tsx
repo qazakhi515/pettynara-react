@@ -42,7 +42,9 @@ export default function Accessories() {
           productId: item._id,
           name: item.productName,
           price: item.productPrice,
-          image: `${serverApi}/${item.productImages[0]}`,
+          image: item.productImages?.[0]
+            ? `${serverApi}/${item.productImages[0]}`
+            : "/img/home/item1.webp",
         }))
       : MOCK_ITEMS;
 

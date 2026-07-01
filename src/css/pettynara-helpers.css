@@ -1,0 +1,277 @@
+/* ============================================================
+   Pettynara — Pet Helpers page
+   ============================================================ */
+
+.helpers-page {
+  width: 100%;
+  font-family: "Poppins";
+  color: #233028;
+  background: #ffffff;
+  padding-bottom: 56px;
+}
+
+.helpers-wrap {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== Header ===== */
+.helpers-header {
+  width: 100%;
+  padding: 30px 0 34px;
+  background: linear-gradient(180deg, #fff8ef 0%, #f6faf6 100%);
+  margin-bottom: 26px;
+}
+
+.helpers-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7a72;
+  margin-bottom: 10px;
+}
+.helpers-breadcrumb span {
+  cursor: pointer;
+}
+.helpers-breadcrumb span:hover {
+  color: #1f9d76;
+}
+.helpers-breadcrumb i {
+  font-style: normal;
+  color: #b7c2bb;
+}
+.helpers-breadcrumb b {
+  color: #233028;
+}
+
+.helpers-title {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.helpers-subtitle {
+  margin: 4px 0 22px;
+  font-size: 16px;
+  color: #5b6b62;
+  max-width: 620px;
+}
+
+.helpers-trust {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.helpers-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #eef2ef;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(31, 157, 118, 0.05);
+}
+
+.helpers-trust-item .ht-ico {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #eef6f1;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ht-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.ht-desc {
+  font-size: 12px;
+  color: #6b7a72;
+}
+
+/* ===== Filters ===== */
+.helpers-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.hf-chip {
+  padding: 9px 18px;
+  border: 1px solid #e4ebe7;
+  border-radius: 999px;
+  background: #ffffff;
+  font-family: "Poppins";
+  font-size: 14px;
+  font-weight: 600;
+  color: #3a4a42;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.hf-chip:hover {
+  border-color: #1f9d76;
+  color: #1f9d76;
+}
+
+.hf-chip.active {
+  background: #1f9d76;
+  border-color: #1f9d76;
+  color: #ffffff;
+}
+
+.helpers-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5b6b62;
+  margin-bottom: 18px;
+}
+
+/* ===== Cards grid ===== */
+.helpers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.helper-page-card {
+  border: 1px solid #eef2ef;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.helper-page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(31, 157, 118, 0.14);
+}
+
+.hpc-top {
+  position: relative;
+  height: 210px;
+  background: #f1f7f4;
+}
+
+.hpc-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hpc-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: #1f9d76;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(31, 157, 118, 0.35);
+}
+
+.hpc-body {
+  padding: 16px;
+}
+
+.hpc-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #233028;
+}
+
+.hpc-spec {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f9d76;
+  margin-top: 2px;
+}
+
+.hpc-sub {
+  font-size: 12px;
+  color: #7a8a81;
+  margin: 4px 0 10px;
+}
+
+.hpc-message {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 21px;
+  color: #5b6b62;
+  font-style: italic;
+}
+
+.hpc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.hpc-tags span {
+  font-size: 11px;
+  color: #4f6157;
+  background: #f1f7f4;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.hpc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hpc-rating {
+  font-size: 14px;
+  font-weight: 600;
+  color: #233028;
+}
+.hpc-rating em {
+  font-style: normal;
+  color: #7a8a81;
+  font-weight: 400;
+}
+
+.hpc-contact {
+  border: none;
+  background: #1f9d76;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-family: "Poppins";
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.hpc-contact:hover {
+  background: #178a67;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .helpers-trust {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .helpers-title {
+    font-size: 32px;
+  }
+}

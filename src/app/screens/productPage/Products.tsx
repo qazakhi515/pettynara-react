@@ -1,23 +1,22 @@
-import { Box, Button, Container, Stack } from "@mui/material";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Badge from "@mui/material/Badge";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Product, ProductInquiry } from "../../../lib/types/product";
 import { setProducts } from "./slice";
-import { createSelector } from "@reduxjs/toolkit";
+import { createSelector, Dispatch } from "@reduxjs/toolkit";
 import { retrieveProducts } from "./selector";
-import { Dispatch } from "@reduxjs/toolkit";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { useDispatch, useSelector } from "react-redux";
 import { serverApi } from "../../../lib/config";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
+import FavoriteButton from "../../components/favorite/FavoriteButton";
+import "../../../css/pettynara-products.css";
 
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
@@ -26,284 +25,298 @@ const productsRetriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
+interface CollectionMeta {
+  key: ProductCollection;
+  label: string;
+  icon: string;
+  subtitle: string;
+  leftImg: string; // real photo (left)
+  rightImg: string; // cartoon (right)
+}
+
+const COLLECTIONS: CollectionMeta[] = [
+  { key: ProductCollection.DOG, label: "Dogs", icon: "🐶", subtitle: "Find your perfect furry friend", leftImg: "/img/It1.jpg", rightImg: "/img/itButton.png" },
+  { key: ProductCollection.CAT, label: "Cats", icon: "🐱", subtitle: "Meet your cuddly companion", leftImg: "/img/cat2.jpg", rightImg: "/img/mushukButton.png" },
+  { key: ProductCollection.BIRD, label: "Birds", icon: "🐤", subtitle: "Cheerful feathered friends", leftImg: "/img/SBird.jpg", rightImg: "/img/birdButton.png" },
+  { key: ProductCollection.FISH, label: "Fish", icon: "🐠", subtitle: "Calm and colourful aquatic pets", leftImg: "/img/Nemo.jpg", rightImg: "/img/home/fish.webp" },
+  { key: ProductCollection.RABBIT, label: "Rabbits", icon: "🐰", subtitle: "Soft and gentle little friends", leftImg: "/img/QUyon.jpg", rightImg: "/img/rabbitButton.png" },
+  { key: ProductCollection.ACCESSORY, label: "Accessories", icon: "🧸", subtitle: "Everything your pet needs", leftImg: "/img/home/item2.jpg", rightImg: "/img/AcButton.png" },
+];
+
+const SPECIES_LABEL: Record<string, string> = {
+  DOG: "Dog",
+  CAT: "Cat",
+  BIRD: "Bird",
+  FISH: "Fish",
+  RABBIT: "Rabbit",
+  ACCESSORY: "Accessory",
+};
+
+const TRUST = [
+  { icon: "🛡️", title: "Healthy Pets", desc: "Checked & Vaccinated" },
+  { icon: "❤️", title: "Safe Adoption", desc: "Trusted Process" },
+  { icon: "👨‍👩‍👧", title: "Happy Families", desc: "Join Our Community" },
+  { icon: "🎧", title: "24/7 Support", desc: "We're Here to Help" },
+];
+
+type SortKey = "newest" | "priceLow" | "priceHigh";
+
 interface ProductsProps {
   onAdd: (item: CartItem) => void;
 }
 
 export default function Products(props: ProductsProps) {
   const { onAdd } = props;
-
   const { setProducts } = actionDispatch(useDispatch());
-  const { products } = useSelector(productsRetriever); //product larni chaqirish
+  const { products } = useSelector(productsRetriever);
+  const history = useHistory();
+  const location = useLocation();
+
+  const collectionFromUrl = (): ProductCollection => {
+    const raw = new URLSearchParams(location.search).get("collection");
+    const found = COLLECTIONS.find((c) => c.key === raw);
+    return found ? found.key : ProductCollection.DOG;
+  };
+
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
-    limit: 8,
+    limit: 9,
     order: "createdAt",
-    productCollection: ProductCollection.DOG,
-    search: " ",
+    productCollection: collectionFromUrl(),
+    search: "",
   });
   const [searchText, setSearchText] = useState<string>("");
-  const history = useHistory();
+  const [sort, setSort] = useState<SortKey>("newest");
+
+  // Sync collection when the URL query changes (navbar Dogs/Cats links)
   useEffect(() => {
-    //Backend server data request => data
+    setProductSearch((prev) => ({
+      ...prev,
+      page: 1,
+      productCollection: collectionFromUrl(),
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  useEffect(() => {
     const product = new ProductService();
     product
       .getProducts(productSearch)
-      .then((data) => {
-        setProducts(data); //slice go
-      })
+      .then((data) => setProducts(data))
       .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productSearch]);
 
-  useEffect(() => {
-    if (searchText === "") {
-      productSearch.search = "";
-      setProductSearch({ ...productSearch });
-    }
-  }, [searchText]);
+  const activeMeta =
+    COLLECTIONS.find((c) => c.key === productSearch.productCollection) ??
+    COLLECTIONS[0];
 
-  //** Handler */
-  const searchCollectionHandler = (collection: ProductCollection) => {
-    productSearch.page = 1;
-    productSearch.productCollection = collection;
-    setProductSearch({ ...productSearch });
+  // client-side direction for price (backend sorts productPrice ascending)
+  const displayed = useMemo(() => {
+    const list = [...products];
+    if (sort === "priceHigh") list.sort((a, b) => b.productPrice - a.productPrice);
+    else if (sort === "priceLow") list.sort((a, b) => a.productPrice - b.productPrice);
+    return list;
+  }, [products, sort]);
+
+  /** Handlers */
+  const chooseCollection = (c: ProductCollection) => {
+    history.push(`/products?collection=${c}`);
   };
-  //** Search Order Handler */
-  const searchOrderHandler = (order: string) => {
-    productSearch.page = 1;
-    productSearch.order = order;
-    setProductSearch({ ...productSearch });
+
+  const changeSort = (value: SortKey) => {
+    setSort(value);
+    setProductSearch((prev) => ({
+      ...prev,
+      page: 1,
+      order: value === "newest" ? "createdAt" : "productPrice",
+    }));
   };
 
   const searchProductHandler = () => {
-    productSearch.search = searchText;
-    setProductSearch({ ...productSearch });
+    setProductSearch((prev) => ({ ...prev, page: 1, search: searchText }));
   };
 
   const paginationHandler = (e: ChangeEvent<any>, value: number) => {
-    productSearch.page = value;
-    setProductSearch({ ...productSearch });
+    setProductSearch((prev) => ({ ...prev, page: value }));
   };
 
-  const choseDishHandler = (id: string) => {
-    history.push(`/products/${id}`);
-  };
+  const chooseProduct = (id: string) => history.push(`/products/${id}`);
 
   return (
-    <div className={"products"}>
-      <Container>
-        <Stack flexDirection={"column"} alignItems={"center"}>
-          <Stack className={"avatar-big-box"}>
-            <Box className="main-title">Pettynara</Box>
-            <div className="mclain-input">
+    <div className="pets-page">
+      {/* ===== Header ===== */}
+      <div className="pets-header">
+        <div className="pets-wrap">
+          <div className="pets-head-top">
+            <img
+              className="pets-head-left"
+              src={activeMeta.leftImg}
+              alt={activeMeta.label}
+            />
+            <div className="pets-head-mid">
+              <div className="pets-breadcrumb">
+                <span onClick={() => history.push("/")}>Home</span>
+                <i>›</i>
+                <span>Pets</span>
+                <i>›</i>
+                <b>{activeMeta.label}</b>
+              </div>
+              <h1 className="pets-title">{activeMeta.label}</h1>
+              <p className="pets-subtitle">{activeMeta.subtitle}</p>
+            </div>
+            <img
+              className="pets-head-right"
+              src={activeMeta.rightImg}
+              alt=""
+            />
+          </div>
+
+          <div className="pets-trust">
+            {TRUST.map((t) => (
+              <div key={t.title} className="pets-trust-item">
+                <span className="pt-ico" role="img" aria-label={t.title}>
+                  {t.icon}
+                </span>
+                <div>
+                  <div className="pt-title">{t.title}</div>
+                  <div className="pt-desc">{t.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Body ===== */}
+      <div className="pets-wrap pets-body">
+        {/* Sidebar */}
+        <aside className="pets-sidebar">
+          <div className="ps-title">Categories</div>
+          <div className="ps-cats">
+            {COLLECTIONS.map((c) => (
+              <button
+                key={c.key}
+                className={
+                  "ps-cat" +
+                  (productSearch.productCollection === c.key ? " active" : "")
+                }
+                onClick={() => chooseCollection(c.key)}
+              >
+                <span className="ps-cat-ico">{c.icon}</span>
+                <span>{c.label}</span>
+              </button>
+            ))}
+          </div>
+        </aside>
+
+        {/* Main */}
+        <main className="pets-main">
+          <div className="pets-toolbar">
+            <div className="pets-search">
               <input
                 type="text"
-                placeholder="Type here..."
+                placeholder={`Search ${activeMeta.label.toLowerCase()} by name or keyword...`}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") searchProductHandler();
                 }}
               />
-              <button
-                className="main-input-button"
-                onClick={searchProductHandler}
-              >
-                Search{" "}
-              </button>
+              <button onClick={searchProductHandler}>🔍</button>
             </div>
-          </Stack>
 
-          <Stack className={"dishes-frame-section"}>
-            <Stack className={"dishes-filter-box"}>
-              <Button
-                variant={"contained"}
-                className={"order"}
-                color={
-                  productSearch.order === "createdAt" ? "primary" : "secondary"
-                }
-                onClick={() => searchOrderHandler("createdAt")}
+            <div className="pets-sort">
+              <label>Sort by:</label>
+              <select
+                aria-label="Sort products"
+                value={sort}
+                onChange={(e) => changeSort(e.target.value as SortKey)}
               >
-                New
-              </Button>
-              <Button
-                variant={"contained"}
-                className={"order"}
-                color={
-                  productSearch.order === "productPrice"
-                    ? "primary"
-                    : "secondary"
-                }
-                onClick={() => searchOrderHandler("productPrice")}
-              >
-                Price
-              </Button>
-              <Button
-                variant={"contained"}
-                className={"order"}
-                color={
-                  productSearch.order === "productViews"
-                    ? "primary"
-                    : "secondary"
-                }
-                onClick={() => searchOrderHandler("productViews")}
-              >
-                Views
-              </Button>
-            </Stack>
-          </Stack>
+                <option value="newest">Newest First</option>
+                <option value="priceLow">Price: Low to High</option>
+                <option value="priceHigh">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
 
-          <Stack className={"list-category-section"}>
-            <Stack className={"product-category"}>
-              <div className={"category-main"}>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.DOG
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() => searchCollectionHandler(ProductCollection.DOG)}
-                >
-                  Dogs
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.CAT
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() => searchCollectionHandler(ProductCollection.CAT)}
-                >
-                  Cats
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.BIRD
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() => searchCollectionHandler(ProductCollection.BIRD)}
-                >
-                  Birds
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.FISH
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() => searchCollectionHandler(ProductCollection.FISH)}
-                >
-                  Fish
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection === ProductCollection.RABBIT
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() =>
-                    searchCollectionHandler(ProductCollection.RABBIT)
-                  }
-                >
-                  Rabbits
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={
-                    productSearch.productCollection ===
-                    ProductCollection.ACCESSORY
-                      ? "primary"
-                      : "secondary"
-                  }
-                  onClick={() =>
-                    searchCollectionHandler(ProductCollection.ACCESSORY)
-                  }
-                >
-                  Accessories
-                </Button>
-              </div>
-            </Stack>
-            <Stack className={"product-wrapper"}>
-              {products.length !== 0 ? (
-                products.map((product, index) => {
-                  const imagePath = `${serverApi}/${product.productImages[0]}`;
-                  const sizeVolume =
-                    product.productCollection === ProductCollection.ACCESSORY
-                      ? product.productVolume + " litre"
-                      : product.productSize + " size";
-                  return (
-                    <Stack
-                      key={product._id}
-                      className={"product-card"}
-                      onClick={() => choseDishHandler(product._id)}
+          <div className="pets-count">
+            {displayed.length} {activeMeta.label.toLowerCase()} found
+          </div>
+
+          <div className="pets-grid">
+            {displayed.length !== 0 ? (
+              displayed.map((product) => {
+                const imagePath = product.productImages?.[0]
+                  ? `${serverApi}/${product.productImages[0]}`
+                  : "/img/home/pet1.webp";
+                const flag = product.productViews > 0 ? "Popular" : "New";
+                return (
+                  <div
+                    key={product._id}
+                    className="pet-item-card"
+                    onClick={() => chooseProduct(product._id)}
+                  >
+                    <div
+                      className="pic-photo"
+                      style={{ backgroundImage: `url(${imagePath})` }}
                     >
-                      <Stack
-                        className={"product-img"}
-                        sx={{ backgroundImage: `url(${imagePath})` }}
+                      <span
+                        className={
+                          "pic-flag " + (flag === "Popular" ? "popular" : "new")
+                        }
                       >
-                        <div className={"product-sale"}>{sizeVolume}</div>
+                        {flag}
+                      </span>
+                      <FavoriteButton id={product._id} className="pic-fav" />
+                    </div>
 
-                        <Button
-                          className={"shop-btn"}
-                          onClick={(e) => {
-                            onAdd({
-                              _id: product._id,
-                              quantity: 1,
-                              name: product.productName,
-                              price: product.productPrice,
-                              image: product.productImages[0],
-                            });
-                            e.stopPropagation();
-                          }}
-                        >
-                          <img
-                            src={"/icons/shopping-cart.svg"}
-                            style={{ display: "flex" }}
-                            alt="shop"
-                          />
-                        </Button>
-
-                        <Button className={"view-btn"} sx={{ right: "36px" }}>
+                    <div className="pic-body">
+                      <div className="pic-name">{product.productName}</div>
+                      <div className="pic-meta">
+                        {SPECIES_LABEL[product.productCollection] ?? "Pet"} ·{" "}
+                        {product.productSize}
+                      </div>
+                      <div className="pic-foot">
+                        <span className="pic-price">
+                          ${product.productPrice}
+                        </span>
+                        <div className="pic-actions">
                           <Badge
                             badgeContent={product.productViews}
-                            color="secondary"
+                            color="primary"
                           >
-                            <RemoveRedEyeIcon
-                              sx={{
-                                color:
-                                  product.productViews === 0 ? "gray" : "white",
-                              }}
-                            />
+                            <RemoveRedEyeIcon sx={{ fontSize: 20 }} />
                           </Badge>
-                        </Button>
-                      </Stack>
-
-                      <Box className={"product-desc"}>
-                        <span className={"product-title"}>
-                          {product.productName}
-                        </span>
-
-                        <div className={"product-desc"}>
-                          <MonetizationOnIcon />
-                          {product.productPrice}
+                          <button
+                            className="pic-cart"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAdd({
+                                _id: product._id,
+                                quantity: 1,
+                                name: product.productName,
+                                price: product.productPrice,
+                                image: product.productImages?.[0] ?? "",
+                              });
+                            }}
+                          >
+                            🛒
+                          </button>
                         </div>
-                      </Box>
-                    </Stack>
-                  );
-                })
-              ) : (
-                <Box className="no-data">Products are not available!</Box>
-              )}
-            </Stack>
-          </Stack>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="pets-empty">
+                No {activeMeta.label.toLowerCase()} available yet.
+              </div>
+            )}
+          </div>
 
-          <Stack className={"pagination-section"}>
+          <div className="pets-pagination">
             <Pagination
               count={
                 products.length !== 0
@@ -318,48 +331,13 @@ export default function Products(props: ProductsProps) {
                     next: ArrowForwardIcon,
                   }}
                   {...item}
-                  color={"secondary"}
+                  color={"primary"}
                 />
               )}
               onChange={paginationHandler}
             />
-          </Stack>
-        </Stack>
-      </Container>
-
-      <div className={"brands-logo"}>
-        <Container className="family-brands">
-          <Box className="category-title">Our Family Brands</Box>
-          <Stack className="brand-list">
-            <Box className="review-box">
-              <img src="/img/gurme.webp" />
-            </Box>
-            <Box className="review-box">
-              <img src="/img/seafood.webp" />
-            </Box>
-            <Box className="review-box">
-              <img src="/img/sweets.webp" />
-            </Box>
-            <Box className="review-box">
-              <img src="/img/doner.webp" />
-            </Box>
-          </Stack>
-        </Container>
-      </div>
-
-      <div className={"address"}>
-        <Container>
-          <Stack className={"address-area"}>
-            <Box className={"title"}>Our address</Box>
-            <iframe
-              style={{ marginTop: "60px" }}
-              src="https://www.google.com/maps?q=Gangnam,Seoul&output=embed"
-              width="1320"
-              height="500"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </Stack>
-        </Container>
+          </div>
+        </main>
       </div>
     </div>
   );

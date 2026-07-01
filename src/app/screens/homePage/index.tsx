@@ -30,12 +30,12 @@ export default function HomePage() {
   useEffect(() => {
     // Backend server data request => data
     const product = new ProductService();
+    // Popular Pets: all animals ordered by views (mixed collections)
     product
       .getProducts({
         page: 1,
         limit: 4,
         order: "productViews",
-        productCollection: ProductCollection.DOG,
       })
       .then((data) => setPopularDishes(data))
       .catch((err) => console.log(err));
@@ -43,7 +43,7 @@ export default function HomePage() {
     product
       .getProducts({
         page: 1,
-        limit: 4,
+        limit: 8,
         order: "createdAt",
         productCollection: ProductCollection.ACCESSORY,
       })
