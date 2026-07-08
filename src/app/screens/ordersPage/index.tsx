@@ -5,6 +5,11 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import PausedOrders from "./PausedOrders";
 import ProcessOrders from "./ProcessOrders";
 import FinishedOrders from "./FinishedOrders";
@@ -14,9 +19,9 @@ import { setPausedOrders, setProcessOrders, setFinishedOrders } from "./slice";
 import "../../../css/order.css";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
+import { serverApi } from "../../../lib/config";
 import OrderService from "../../services/OrdersService";
 import { useGlobals } from "../../components/hooks/useGlobals";
-import { useHistory } from "react-router-dom";
 
 //** redux slice and selector **//
 
@@ -29,9 +34,8 @@ export default function OrdersPage() {
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
   const { orderBuilder, authMember } = useGlobals();
-  const history = useHistory();
   const [value, setValue] = useState("1");
-  const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
+  const [orderInquiry] = useState<OrderInquiry>({
     page: 1,
     limit: 5,
     orderStatus: OrderStatus.PAUSE,
@@ -54,6 +58,7 @@ export default function OrdersPage() {
       .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.FINISH })
       .then((data) => setFinishedOrders(data))
       .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderInquiry, orderBuilder]);
 
   const handleChange = (e: SyntheticEvent, newValue: string) => {
@@ -63,20 +68,26 @@ export default function OrdersPage() {
   return (
     <div className={"order-page"}>
       <Container className={"order-container"}>
+        {/* PAGE HEADING */}
+        <Box className={"order-heading"}>
+          <h1>My Orders</h1>
+          <p>Track, pay and complete your pet adoptions — all in one place. 🐾</p>
+        </Box>
+
         {/* LEFT SIDE */}
         <Stack className={"order-left"}>
           <TabContext value={value}>
             <Box className={"order-nav-frame"}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Box>
                 <Tabs
                   value={value}
                   onChange={handleChange}
                   aria-label="basic tabs example"
                   className={"table_list"}
                 >
-                  <Tab label="PAUSED ORDERS" value={"1"} />
-                  <Tab label="PROCESS ORDERS" value={"2"} />
-                  <Tab label="FINISHED ORDERS" value={"3"} />
+                  <Tab label="Paused Orders" value={"1"} />
+                  <Tab label="Process Orders" value={"2"} />
+                  <Tab label="Finished Orders" value={"3"} />
                 </Tabs>
               </Box>
             </Box>
@@ -104,7 +115,11 @@ export default function OrdersPage() {
             <Box className={"member-box"}>
               <div className={"order-user-img"}>
                 <img
-                  src={"/icons/default-user.svg"}
+                  src={
+                    authMember?.memberImage
+                      ? `${serverApi}/${authMember.memberImage}`
+                      : "/icons/default-user.svg"
+                  }
                   className={"order-user-avatar"}
                   alt="user"
                 />
@@ -117,19 +132,32 @@ export default function OrdersPage() {
                 </div>
               </div>
 
-              <span className={"order-user-name"}>Justin</span>
-              <span className={"order-user-prof"}>User</span>
+              <span className={"order-user-name"}>
+                {authMember?.memberNick ?? "User"}
+              </span>
+              <span className={"order-user-prof"}>
+                {authMember?.memberType ?? "User"}
+              </span>
             </Box>
 
             <Box className={"liner"} />
 
             <Box className={"order-user-address"}>
               <LocationOnIcon />
-              <span className={"spec-address-txt"}>Busan, Korea</span>
+              <span className={"spec-address-txt"}>
+                {authMember?.memberAddress
+                  ? authMember.memberAddress
+                  : "no address"}
+              </span>
             </Box>
           </Box>
 
-          <Box className={"order-info-box"}>
+          {/* PAYMENT CARD */}
+          <Box className={"order-info-box payment-box"}>
+            <span className={"payment-title"}>
+              <CreditCardIcon /> Payment Method
+            </span>
+
             <input
               className={"card-input"}
               placeholder="Card number : **** 4090 2002 7495"
@@ -153,6 +181,46 @@ export default function OrdersPage() {
               <img src={"/icons/master-card.svg"} alt="mastercard" />
               <img src={"/icons/paypal-card.svg"} alt="paypal" />
               <img src={"/icons/visa-card.svg"} alt="visa" />
+            </Box>
+          </Box>
+
+          {/* TRUST BENEFITS */}
+          <Box className={"order-benefits"}>
+            <Box className={"benefit-row"}>
+              <span className={"benefit-icon"}>
+                <HealthAndSafetyIcon />
+              </span>
+              <span className={"benefit-text"}>
+                <b>Health Checked</b>
+                <span>All pets are vet-checked</span>
+              </span>
+            </Box>
+            <Box className={"benefit-row"}>
+              <span className={"benefit-icon"}>
+                <LocalShippingIcon />
+              </span>
+              <span className={"benefit-text"}>
+                <b>Safe Delivery</b>
+                <span>Professional pet transport</span>
+              </span>
+            </Box>
+            <Box className={"benefit-row"}>
+              <span className={"benefit-icon"}>
+                <VerifiedUserIcon />
+              </span>
+              <span className={"benefit-text"}>
+                <b>14-Day Health Guarantee</b>
+                <span>Full support after delivery</span>
+              </span>
+            </Box>
+            <Box className={"benefit-row"}>
+              <span className={"benefit-icon"}>
+                <SupportAgentIcon />
+              </span>
+              <span className={"benefit-text"}>
+                <b>24/7 Customer Support</b>
+                <span>We are always here to help</span>
+              </span>
             </Box>
           </Box>
         </Stack>

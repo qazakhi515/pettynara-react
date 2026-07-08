@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Box, Button, Container, Typography } from "@mui/material";
-import { Link, Route, Switch, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Switch, useLocation } from "react-router-dom";
 import HomePage from "./screens/homePage";
 import ProductsPage from "./screens/productPage";
 import OrdersPage from "./screens/ordersPage";
@@ -10,13 +9,12 @@ import OtherNavbar from "./components/headers/OtherNavbar";
 import Footer from "./components/footer";
 import HelpPage from "./screens/helpPage";
 import HelpersPage from "./screens/helpersPage";
-import Test from "./screens/Test";
+import HelperDetail from "./screens/helpersPage/HelperDetail";
 import useBasket from "./components/hooks/useBasket";
 import AuthenticationModal from "./components/auth";
 import "../css/app.css";
 import "../css/navbar.css";
 import "../css/footer.css";
-import { T } from "../lib/types/common";
 import { sweetErrorHandling, sweetTopSuccessAlert } from "../lib/sweetAlert";
 import { Messages } from "../lib/config";
 import MemberService from "./services/memberService";
@@ -24,6 +22,12 @@ import { useGlobals } from "./components/hooks/useGlobals";
 
 function App() {
   const location = useLocation();
+
+  // Scroll to the top (hero) on every route change so pages open from the top,
+  // not wherever the previous page was scrolled to.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   const { setAuthMember } = useGlobals();
   const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = useBasket();
   const [signupOpen, setSignupOpen] = useState<boolean>(false);
@@ -91,6 +95,9 @@ function App() {
         </Route>
         <Route path="/member-page">
           <UserPage />
+        </Route>
+        <Route path="/helpers/:helperId">
+          <HelperDetail />
         </Route>
         <Route path="/helpers">
           <HelpersPage />

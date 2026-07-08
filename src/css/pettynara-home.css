@@ -52,8 +52,8 @@
 .pet-hero-head {
   width: 100%;
   max-width: 1600px;
-  margin: 0 auto 20px;
   padding: 0 20px;
+  margin: 0 auto 20px;
 }
 
 .pet-hero-inner {
@@ -349,8 +349,8 @@
 /* ----- question ----- */
 
 .sc-question {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   padding: 16px;
@@ -458,8 +458,8 @@
 /* ----- results ----- */
 
 .sc-results {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
@@ -655,8 +655,42 @@
 
 .helper-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  align-items: start; /* each card hugs its own content, no empty stretch */
+}
+
+/* Compact helper cards on the home page (smaller than the /helpers page) */
+
+.helper-row .hpc-top {
+  height: 210px;
+}
+
+.helper-row .hpc-photo {
+  object-fit: cover;
+  object-position: center;
+}
+
+.helper-row .hpc-body {
+  padding: 8px 14px 10px;
+}
+
+.helper-row .hpc-name {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.helper-row .hpc-spec {
+  font-size: 13px;
+  margin-top: 1px;
+}
+
+.helper-row .hpc-sub {
+  margin: 3px 0 7px;
+}
+
+.helper-row .hpc-tags {
+  margin-bottom: 10px;
 }
 
 .helper-card {
@@ -709,7 +743,7 @@
 .helper-name {
   font-size: 16px;
   font-weight: 700;
-  color: #23302c8;
+  color: #23302c;
 }
 
 .helper-spec {
@@ -762,6 +796,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
+  align-items: start; /* each card hugs its content, no empty stretch */
 }
 
 .pet-card {
@@ -783,7 +818,7 @@
 .pet-photo {
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 200px;
   background-color: #f1f7f4;
   background-position: center;
   background-size: cover;
@@ -816,23 +851,26 @@
 }
 
 .pet-body {
-  padding: 12px 14px 14px;
+  padding: 6px 14px 8px;
 }
 
 .pet-name {
   font-size: 15px;
   font-weight: 700;
+  line-height: 1.2;
   color: #233028;
 }
 
 .pet-meta {
-  margin: 2px 0 8px;
+  margin: 0 0 2px;
   font-size: 12px;
+  line-height: 1.25;
   color: #7a8a81;
 }
 
 .pet-stats {
   font-size: 13px;
+  line-height: 1.2;
   color: #4f6157;
 }
 
@@ -844,14 +882,15 @@
 
 .item-row {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  align-items: start; /* each card hugs its content, no empty stretch */
 }
 
 .item-card {
-  padding: 10px;
+  overflow: hidden;
   border: 1px solid #eef2ef;
-  border-radius: 16px;
+  border-radius: 18px;
   background: #ffffff;
   transition:
     transform 160ms ease,
@@ -860,33 +899,37 @@
 }
 
 .item-card:hover {
-  box-shadow: 0 10px 22px rgba(31, 157, 118, 0.12);
+  box-shadow: 0 12px 26px rgba(31, 157, 118, 0.14);
   transform: translateY(-4px);
 }
 
 .item-photo {
   width: 100%;
-  height: 72px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  height: 185px;
   background-color: #f1f7f4;
   background-position: center;
   background-size: cover;
 }
 
+.item-body {
+  padding: 8px 14px 10px;
+}
+
 .item-name {
   overflow: hidden;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #233028;
 }
 
 .item-price {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 14px;
   font-weight: 700;
+  line-height: 1.2;
   color: #1f9d76;
 }
 
@@ -915,12 +958,9 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .pet-row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
+  .pet-row,
   .item-row {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -939,4 +979,32 @@
   .item-row {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ===== Happy Tails video section (full-width landscape banner) ===== */
+
+.pettynara-home .pet-video {
+  width: 100%;
+  padding: 30px 0 44px;
+}
+
+/* full-bleed band: spans the entire page width, edge to edge */
+
+.pettynara-home .pet-video .pet-video-band {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-height: 82vh;
+  background: #0c0e12;
+  box-shadow: 0 20px 50px rgba(31, 157, 118, 0.18);
+  aspect-ratio: 16 / 9;
+}
+
+.pettynara-home .pet-video .pet-video-media {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  inset: 0; /* 16: 9 source fills the 16:9 band with no cropping; */
 }

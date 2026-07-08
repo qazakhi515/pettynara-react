@@ -381,7 +381,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
                       }}
                     />
                     <div className="pd-mini-name">{p.productName}</div>
-                    <div className="pd-mini-price">${p.productPrice}</div>
+                    <div className="pd-mini-price">₩{p.productPrice}</div>
                   </div>
                 ))}
               </div>
@@ -410,7 +410,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
                       }}
                     />
                     <div className="pd-mini-name">{p.name}</div>
-                    <div className="pd-mini-price">${p.price}</div>
+                    <div className="pd-mini-price">₩{p.price}</div>
                   </div>
                 ))}
               </div>
@@ -424,7 +424,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
             <div className="pd-price-row">
               <div>
                 <div className="pd-price-label">Price</div>
-                <div className="pd-price">${chosenProduct.productPrice}</div>
+                <div className="pd-price">₩{chosenProduct.productPrice}</div>
               </div>
               <div className="pd-icon-actions">
                 <FavoriteButton id={chosenProduct._id} className="pd-icon-btn" />

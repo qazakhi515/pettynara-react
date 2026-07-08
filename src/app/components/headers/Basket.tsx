@@ -11,7 +11,6 @@ import { CartItem } from "../../../lib/types/search";
 import { Messages, serverApi } from "../../../lib/config";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { useGlobals } from "../hooks/useGlobals";
-import { Message } from "@mui/icons-material";
 import OrderService from "../../services/OrdersService";
 interface BasketProps {
   cartItems: CartItem[];
@@ -71,7 +70,7 @@ export default function Basket(props: BasketProps) {
         onClick={handleClick}
       >
         <Badge badgeContent={cartItems.length} color="secondary">
-          <img src={"/icons/shopping-cart.svg"} />
+          <ShoppingCartIcon sx={{ color: "#1f9d76", fontSize: 26 }} />
         </Badge>
       </IconButton>
       <Menu
@@ -137,7 +136,11 @@ export default function Basket(props: BasketProps) {
                         onClick={() => onDelete(item)}
                       />
                     </div>
-                    <img src={imagePath} className={"product-img"} />
+                    <img
+                      src={imagePath}
+                      className={"product-img"}
+                      alt={item.name}
+                    />
                     <span className={"product-name"}>{item.name}</span>
                     <p className={"product-price"}>
                       {item.quantity} x {item.price}
@@ -163,7 +166,7 @@ export default function Basket(props: BasketProps) {
           {cartItems.length !== 0 ? (
             <Box className={"basket-order"}>
               <span className={"price"}>
-                Total: ${totalPrice} ({itemsPrice} + {shippingCost})
+                Total: ₩{totalPrice} ({itemsPrice} + {shippingCost})
               </span>
               <Button
                 onClick={proceedOrderHandler}

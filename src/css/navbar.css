@@ -60,7 +60,8 @@
   text-decoration: none;
 }
 
-.pettynara-navbar .hover-line a {
+.pettynara-navbar .hover-line a,
+.pettynara-navbar .hover-line .smart-link {
   position: relative;
   color: #2c3a34;
   font-family: "Poppins";
@@ -70,7 +71,8 @@
   transition: color 200ms ease-in-out;
 }
 
-.pettynara-navbar .hover-line a:hover {
+.pettynara-navbar .hover-line a:hover,
+.pettynara-navbar .hover-line .smart-link:hover {
   color: #1f9d76;
 }
 

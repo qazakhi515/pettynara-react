@@ -78,7 +78,9 @@ export default function HomeNavbar(props: HomeNavbarProps) {
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <a onClick={handleSmartSearch}>Smart Search</a>
+            <span className="smart-link" onClick={handleSmartSearch}>
+              Smart Search
+            </span>
           </Box>
           {authMember ? (
             <Box className={"hover-line"}>
@@ -123,7 +125,7 @@ export default function HomeNavbar(props: HomeNavbarProps) {
                   ? `${serverApi}/${authMember?.memberImage}`
                   : "/icons/default-user.svg"
               }
-              aria-haspopup={"true"}
+              alt="profile"
               onClick={handleLogoutClick}
             />
           )}

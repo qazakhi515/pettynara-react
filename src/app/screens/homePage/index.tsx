@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import CategoryRow from "./CategoryRow";
 import PetHelpers from "./PetHelpers";
 import PopularPets from "./PopularPets";
+import Advertisement from "./Advertisement";
 import Accessories from "./Accessories";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -34,7 +35,7 @@ export default function HomePage() {
     product
       .getProducts({
         page: 1,
-        limit: 4,
+        limit: 5,
         order: "productViews",
       })
       .then((data) => setPopularDishes(data))
@@ -43,7 +44,7 @@ export default function HomePage() {
     product
       .getProducts({
         page: 1,
-        limit: 8,
+        limit: 5,
         order: "createdAt",
         productCollection: ProductCollection.ACCESSORY,
       })
@@ -55,6 +56,7 @@ export default function HomePage() {
       .getTopUsers()
       .then((data) => setTopUsers(data))
       .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -63,6 +65,7 @@ export default function HomePage() {
       <CategoryRow />
       <PetHelpers />
       <PopularPets />
+      <Advertisement />
       <Accessories />
     </div>
   );

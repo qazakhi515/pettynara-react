@@ -12,7 +12,6 @@ import { Product } from "../../../lib/types/product";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { T } from "../../../lib/types/common";
 import { OrderStatus } from "../../../lib/enums/order.enum";
-import { Message } from "@mui/icons-material";
 import { useGlobals } from "../../components/hooks/useGlobals";
 import OrderService from "../../services/OrdersService";
 
@@ -87,17 +86,17 @@ export default function PausedOrders(props: PausedOrdersProps) {
                   const imagePath = `${serverApi}/${product.productImages[0]}`;
                   return (
                     <Box key={item._id} className={"orders-name-price"}>
-                      <img src={imagePath} className={"order-dish-img"} />
+                      <img src={imagePath} className={"order-dish-img"} alt="" />
 
                       <p className={"title-dish"}>{product.productName}</p>
                       <Box className={"price-box"}>
-                        <p>${item.itemPrice}</p>
-                        <img src={"/icons/close.svg"} />
+                        <p>₩{item.itemPrice}</p>
+                        <img src={"/icons/close.svg"} alt="" />
                         <p>{item.itemQuantity}</p>
-                        <img src={"/icons/pause.svg"} />
+                        <img src={"/icons/pause.svg"} alt="" />
                         <p style={{ marginLeft: "15px" }}>
                           {" "}
-                          ${item.itemQuantity * item.itemPrice}{" "}
+                          ₩{item.itemQuantity * item.itemPrice}{" "}
                         </p>
                       </Box>
                     </Box>
@@ -107,16 +106,17 @@ export default function PausedOrders(props: PausedOrdersProps) {
               <Box className={"total-price-box"}>
                 <Box className={"box-total"}>
                   <p>Product price</p>
-                  <p>${order.orderTotal - order.orderDelivery}</p>
-                  <img src={"/icons/plus.svg"} style={{ marginLeft: "20px" }} />
+                  <p>₩{order.orderTotal - order.orderDelivery}</p>
+                  <img src={"/icons/plus.svg"} style={{ marginLeft: "20px" }} alt="" />
                   <p>Delivery cost</p>
-                  <p>${order.orderDelivery}</p>
+                  <p>₩{order.orderDelivery}</p>
                   <img
                     src={"/icons/pause.svg"}
                     style={{ marginLeft: "20px" }}
+                    alt=""
                   />
                   <p>Total</p>
-                  <p>${order.orderTotal}</p>
+                  <p>₩{order.orderTotal}</p>
                 </Box>
                 <Button
                   value={order._id}
@@ -142,15 +142,9 @@ export default function PausedOrders(props: PausedOrdersProps) {
 
         {!pausedOrders ||
           (pausedOrders.length === 0 && (
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"center"}
-            >
-              <img
-                src={"/icons/noimage-list.svg"}
-                style={{ width: 300, height: 300 }}
-              />
+            <Box className={"order-empty"}>
+              <img src={"/icons/noimage-list.svg"} alt="no orders" />
+              <span>No paused orders yet</span>
             </Box>
           ))}
       </Stack>

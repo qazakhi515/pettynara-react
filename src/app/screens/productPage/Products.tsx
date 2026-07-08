@@ -80,7 +80,7 @@ export default function Products(props: ProductsProps) {
 
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
-    limit: 9,
+    limit: 5,
     order: "createdAt",
     productCollection: collectionFromUrl(),
     search: "",
@@ -279,7 +279,7 @@ export default function Products(props: ProductsProps) {
                       </div>
                       <div className="pic-foot">
                         <span className="pic-price">
-                          ${product.productPrice}
+                          ₩{product.productPrice}
                         </span>
                         <div className="pic-actions">
                           <Badge

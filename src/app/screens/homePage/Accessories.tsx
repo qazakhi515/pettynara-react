@@ -35,7 +35,8 @@ export default function Accessories() {
   const history = useHistory();
 
   // Prefer real backend data; fall back to local cards when empty.
-  const items: ItemCard[] =
+  // Cap at 5 cards on the home page regardless of the source.
+  const items: ItemCard[] = (
     newDishes.length !== 0
       ? newDishes.map((item: Product) => ({
           _id: item._id,
@@ -46,7 +47,8 @@ export default function Accessories() {
             ? `${serverApi}/${item.productImages[0]}`
             : "/img/home/item1.webp",
         }))
-      : MOCK_ITEMS;
+      : MOCK_ITEMS
+  ).slice(0, 5);
 
   const onCardClick = (item: ItemCard) => {
     if (item.productId) history.push(`/products/${item.productId}`);
@@ -78,8 +80,10 @@ export default function Accessories() {
                 className="item-photo"
                 style={{ backgroundImage: `url(${item.image})` }}
               />
-              <div className="item-name">{item.name}</div>
-              <div className="item-price">${item.price}</div>
+              <div className="item-body">
+                <div className="item-name">{item.name}</div>
+                <div className="item-price">₩{item.price}</div>
+              </div>
             </div>
           ))}
         </div>

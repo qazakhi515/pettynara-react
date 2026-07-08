@@ -63,6 +63,9 @@ class MemberService {
       const member: Member = result.data.member;
       console.log("member:", member);
       localStorage.setItem("memberData", JSON.stringify(member));
+      if (result.data.accessToken) {
+        localStorage.setItem("accessToken", result.data.accessToken);
+      }
 
       return member;
     } catch (err) {
@@ -80,6 +83,9 @@ class MemberService {
       const member: Member = result.data.member;
       console.log("member:", member);
       localStorage.setItem("memberData", JSON.stringify(member));
+      if (result.data.accessToken) {
+        localStorage.setItem("accessToken", result.data.accessToken);
+      }
 
       return member;
     } catch (err) {
@@ -95,6 +101,7 @@ class MemberService {
       console.log("logout:", result);
 
       localStorage.removeItem("memberData");
+      localStorage.removeItem("accessToken");
     } catch (err) {
       console.log("Error, logout:", err);
       throw err;

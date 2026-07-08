@@ -1,12 +1,13 @@
 import React, { ReactNode, useState } from "react";
-import Cookies from "universal-cookie";
 import { Member } from "../../../../lib/types/member";
 import { GlobalContext } from "../../hooks/useGlobals";
 
 const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const cookies = new Cookies();
-
-  if (!cookies.get("accessToken")) {
+  // Auth persistence is based on the access token saved to localStorage at
+  // login (memberService) and cleared on logout / on a 401 (axiosSetup).
+  // This survives a page refresh reliably — unlike reading the cookie, which
+  // can be blocked/unreadable and would wrongly log the user out on reload.
+  if (!localStorage.getItem("accessToken")) {
     localStorage.removeItem("memberData");
   }
 
@@ -16,7 +17,6 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       : null,
   );
   const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
-  console.log("=== verify ===");
 
   return (
     <GlobalContext.Provider

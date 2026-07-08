@@ -1,36 +1,10 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { Pagination, Stack } from "@mui/material";
+import { HELPERS } from "../../../lib/data/helpers";
 import "../../../css/pettynara-helpers.css";
 
-/**
- * Pet Helpers page — isolated local mock data.
- * Swap MOCK_HELPERS for a PetHelperService call when the backend is ready;
- * the layout below does not need to change.
- */
-interface Helper {
-  _id: string;
-  name: string;
-  specialty: string;
-  experience: string;
-  location: string;
-  message: string;
-  animals: string[];
-  rating: number;
-  reviews: number;
-  image: string;
-  verified: boolean;
-}
-
-const MOCK_HELPERS: Helper[] = [
-  { _id: "h1", name: "Jiyeon Kim", specialty: "Dog Care Specialist", experience: "3 yrs experience", location: "Seoul, Korea", message: "Loving daily care and walks for your pup.", animals: ["Dogs", "Puppies"], rating: 5.0, reviews: 128, image: "/img/home/ithelper.png", verified: true },
-  { _id: "h2", name: "Minho Park", specialty: "Cat Care Specialist", experience: "4 yrs experience", location: "Seoul, Korea", message: "Calm, gentle handling for shy cats.", animals: ["Cats", "Kittens"], rating: 5.0, reviews: 98, image: "/img/home/catHelper.jpg", verified: true },
-  { _id: "h3", name: "Soojin Lee", specialty: "Small Animals Helper", experience: "2 yrs experience", location: "Incheon, Korea", message: "Friendly care for rabbits and tiny friends.", animals: ["Rabbits", "Guinea Pigs"], rating: 4.9, reviews: 76, image: "/img/home/rabbithelper.jpg", verified: true },
-  { _id: "h4", name: "Hyunwoo Choi", specialty: "Bird Care Helper", experience: "3 yrs experience", location: "Busan, Korea", message: "Patient care for parrots and songbirds.", animals: ["Birds", "Parrots"], rating: 4.9, reviews: 76, image: "/img/home/muhelper.png", verified: true },
-  { _id: "h5", name: "Eunji Han", specialty: "Dog Walker", experience: "2 yrs experience", location: "Seoul, Korea", message: "Energetic daily walks, rain or shine.", animals: ["Dogs"], rating: 4.8, reviews: 54, image: "/img/home/doghelper.jpg", verified: true },
-  { _id: "h6", name: "Jisoo Kang", specialty: "Puppy Trainer", experience: "5 yrs experience", location: "Daejeon, Korea", message: "Positive-reinforcement puppy training.", animals: ["Dogs", "Puppies"], rating: 5.0, reviews: 112, image: "/img/home/dogHel.jpg", verified: true },
-  { _id: "h7", name: "Daniel Cho", specialty: "Cat Sitter", experience: "3 yrs experience", location: "Gwangju, Korea", message: "In-home sitting so your cat stays comfy.", animals: ["Cats"], rating: 4.7, reviews: 41, image: "/img/justin.webp", verified: false },
-  { _id: "h8", name: "Seoyeon Yoon", specialty: "Multi-pet Helper", experience: "4 yrs experience", location: "Ulsan, Korea", message: "Comfortable with dogs, cats and more.", animals: ["Dogs", "Cats"], rating: 4.9, reviews: 88, image: "/img/martin.webp", verified: true },
-];
+const LIMIT = 8; // 4 cards × 2 rows per page
 
 const TRUST = [
   { icon: "✅", title: "Verified Helpers", desc: "Background checked" },
@@ -44,11 +18,25 @@ const FILTERS = ["All", "Dogs", "Cats", "Birds", "Rabbits"];
 export default function HelpersPage() {
   const history = useHistory();
   const [filter, setFilter] = useState<string>("All");
+  const [page, setPage] = useState<number>(1);
 
   const helpers =
     filter === "All"
-      ? MOCK_HELPERS
-      : MOCK_HELPERS.filter((h) => h.animals.includes(filter));
+      ? HELPERS
+      : HELPERS.filter((h) => h.animals.includes(filter));
+
+  const totalPages = Math.ceil(helpers.length / LIMIT);
+  const pagedHelpers = helpers.slice((page - 1) * LIMIT, page * LIMIT);
+
+  const handleFilter = (f: string) => {
+    setFilter(f);
+    setPage(1); // reset to first page when the filter changes
+  };
+
+  const handlePageChange = (_: unknown, value: number) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="helpers-page">
@@ -61,7 +49,10 @@ export default function HelpersPage() {
             <b>Helpers</b>
           </div>
           <h1 className="helpers-title">
-            Pet Helpers <span role="img" aria-label="paw">🐾</span>
+            Pet Helpers{" "}
+            <span role="img" aria-label="paw">
+              🐾
+            </span>
           </h1>
           <p className="helpers-subtitle">
             Trusted, verified helpers to care for your pets — walking, sitting,
@@ -91,7 +82,7 @@ export default function HelpersPage() {
             <button
               key={f}
               className={"hf-chip" + (filter === f ? " active" : "")}
-              onClick={() => setFilter(f)}
+              onClick={() => handleFilter(f)}
             >
               {f}
             </button>
@@ -101,14 +92,14 @@ export default function HelpersPage() {
         <div className="helpers-count">{helpers.length} helpers available</div>
 
         <div className="helpers-grid">
-          {helpers.map((h) => (
-            <div key={h._id} className="helper-page-card">
+          {pagedHelpers.map((h) => (
+            <div
+              key={h._id}
+              className="helper-page-card"
+              onClick={() => history.push(`/helpers/${h._id}`)}
+            >
               <div className="hpc-top">
-                <img
-                  className="hpc-photo"
-                  src={h.image}
-                  alt={h.name}
-                />
+                <img className="hpc-photo" src={h.image} alt={h.name} />
                 {h.verified ? (
                   <span className="hpc-badge" title="Verified helper">
                     ✓ Verified
@@ -133,15 +124,38 @@ export default function HelpersPage() {
 
                 <div className="hpc-foot">
                   <div className="hpc-rating">
-                    <span role="img" aria-label="star">⭐</span>{" "}
+                    <span role="img" aria-label="star">
+                      ⭐
+                    </span>{" "}
                     {h.rating.toFixed(1)} <em>({h.reviews})</em>
                   </div>
-                  <button className="hpc-contact">Contact</button>
+                  <button
+                    type="button"
+                    className="hpc-contact"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      history.push(`/helpers/${h._id}`);
+                    }}
+                  >
+                    Contact
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <Stack className="helpers-pagination" alignItems="center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              shape="rounded"
+              color="primary"
+            />
+          </Stack>
+        )}
       </div>
     </div>
   );
