@@ -12,9 +12,11 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { useDispatch, useSelector } from "react-redux";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
 import { useHistory, useLocation } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
+import { sweetFailureProvider } from "../../../lib/sweetAlert";
+import { useGlobals } from "../../components/hooks/useGlobals";
 import FavoriteButton from "../../components/favorite/FavoriteButton";
 import "../../../css/pettynara-products.css";
 
@@ -69,6 +71,7 @@ export default function Products(props: ProductsProps) {
   const { onAdd } = props;
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
+  const { authMember } = useGlobals();
   const history = useHistory();
   const location = useLocation();
 
@@ -142,6 +145,24 @@ export default function Products(props: ProductsProps) {
   };
 
   const chooseProduct = (id: string) => history.push(`/products/${id}`);
+
+  // skip the basket: hand this single pet straight to the checkout page
+  const buyNowHandler = (product: Product) => {
+    if (!authMember) {
+      sweetFailureProvider(Messages.error2, true);
+      return;
+    }
+    const item: CartItem = {
+      _id: product._id,
+      quantity: 1,
+      name: product.productName,
+      price: product.productPrice,
+      image: product.productImages?.[0] ?? "",
+    };
+    // route state is lost on refresh — keep a copy for the checkout page
+    sessionStorage.setItem("pettynara_checkout", JSON.stringify(item));
+    history.push("/checkout", { mode: "buyNow", item });
+  };
 
   return (
     <div className="pets-page">
@@ -302,6 +323,15 @@ export default function Products(props: ProductsProps) {
                             }}
                           >
                             🛒
+                          </button>
+                          <button
+                            className="pic-buy"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              buyNowHandler(product);
+                            }}
+                          >
+                            ⚡ Buy Now
                           </button>
                         </div>
                       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import TabPanel from "@mui/lab/TabPanel";
@@ -6,11 +6,14 @@ import TabPanel from "@mui/lab/TabPanel";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrievePausedOrders } from "./selector";
+import PaymentModal from "./PaymentModal";
 import { Messages, serverApi } from "../../../lib/config";
 import { Order, OrderItem, OrderUpdateInput } from "../../../lib/types/order";
 import { Product } from "../../../lib/types/product";
-import { sweetErrorHandling } from "../../../lib/sweetAlert";
-import { T } from "../../../lib/types/common";
+import {
+  sweetConfirmProvider,
+  sweetErrorHandling,
+} from "../../../lib/sweetAlert";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import { useGlobals } from "../../components/hooks/useGlobals";
 import OrderService from "../../services/OrdersService";
@@ -27,21 +30,24 @@ export default function PausedOrders(props: PausedOrdersProps) {
   const { authMember, setOrderBuilder } = useGlobals();
   const { setValue } = props;
   const { pausedOrders } = useSelector(pausedOrdersRetriever);
+  const [payOrder, setPayOrder] = useState<Order | null>(null);
 
-  const deleteOrderHandler = async (e: T) => {
+  const deleteOrderHandler = async (orderId: string) => {
     try {
       if (!authMember) throw new Error(Messages.error2);
-      const orderId = e.target.value;
       const input: OrderUpdateInput = {
         orderId: orderId,
         orderStatus: OrderStatus.DELETE,
       };
 
-      const confirmation = window.confirm("want to delete the order");
-      if (confirmation) {
+      const confirmed = await sweetConfirmProvider(
+        "Cancel this order?",
+        "Cancel order",
+      );
+      if (confirmed) {
         const order = new OrderService();
         await order.updateOrder(input);
-        setValue("2");
+        setValue("1");
         setOrderBuilder(new Date());
       }
     } catch (err) {
@@ -50,26 +56,18 @@ export default function PausedOrders(props: PausedOrdersProps) {
     }
   };
 
-  const processOrderHandler = async (e: T) => {
-    try {
-      if (!authMember) throw new Error(Messages.error2);
-      const orderId = e.target.value;
-      const input: OrderUpdateInput = {
-        orderId: orderId,
-        orderStatus: OrderStatus.PROCESS,
-      };
+  // called by the payment modal once the card form is filled in
+  const processOrderHandler = async (orderId: string) => {
+    if (!authMember) throw new Error(Messages.error2);
+    const input: OrderUpdateInput = {
+      orderId: orderId,
+      orderStatus: OrderStatus.PROCESS,
+    };
 
-      const confirmation = window.confirm("want to proceed Payment");
-      if (confirmation) {
-        const order = new OrderService();
-        await order.updateOrder(input);
-        setValue("2");
-        setOrderBuilder(new Date());
-      }
-    } catch (err) {
-      console.log(err);
-      sweetErrorHandling(err).then();
-    }
+    const order = new OrderService();
+    await order.updateOrder(input);
+    setValue("2");
+    setOrderBuilder(new Date());
   };
 
   return (
@@ -78,6 +76,7 @@ export default function PausedOrders(props: PausedOrdersProps) {
         {pausedOrders?.map((order: Order) => {
           return (
             <Box key={order._id} className={"order-main-box"}>
+              <Box className={"order-status-badge paused"}>Awaiting payment</Box>
               <Box className={"order-box-scroll"}>
                 {order?.orderItems?.map((item: OrderItem) => {
                   const product: Product = order.productData.filter(
@@ -119,19 +118,17 @@ export default function PausedOrders(props: PausedOrdersProps) {
                   <p>₩{order.orderTotal}</p>
                 </Box>
                 <Button
-                  value={order._id}
                   variant="contained"
                   color="secondary"
                   className={"cancel-button"}
-                  onClick={deleteOrderHandler}
+                  onClick={() => deleteOrderHandler(order._id)}
                 >
                   Cancel
                 </Button>
                 <Button
-                  value={order._id}
                   variant="contained"
                   className={"pay-button"}
-                  onClick={processOrderHandler}
+                  onClick={() => setPayOrder(order)}
                 >
                   Payment
                 </Button>
@@ -140,14 +137,20 @@ export default function PausedOrders(props: PausedOrdersProps) {
           );
         })}
 
-        {!pausedOrders ||
-          (pausedOrders.length === 0 && (
-            <Box className={"order-empty"}>
-              <img src={"/icons/noimage-list.svg"} alt="no orders" />
-              <span>No paused orders yet</span>
-            </Box>
-          ))}
+        {(!pausedOrders || pausedOrders.length === 0) && (
+          <Box className={"order-empty"}>
+            <img src={"/icons/noimage-list.svg"} alt="no orders" />
+            <span>No paused orders yet</span>
+          </Box>
+        )}
       </Stack>
+
+      <PaymentModal
+        open={!!payOrder}
+        order={payOrder}
+        onClose={() => setPayOrder(null)}
+        onConfirm={processOrderHandler}
+      />
     </TabPanel>
   );
 }

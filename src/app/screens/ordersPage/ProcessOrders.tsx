@@ -13,7 +13,10 @@ import { useGlobals } from "../../components/hooks/useGlobals";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import OrderService from "../../services/OrdersService";
 import { T } from "../../../lib/types/common";
-import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import {
+  sweetConfirmProvider,
+  sweetErrorHandling,
+} from "../../../lib/sweetAlert";
 
 const processOrdersRetriever = createSelector(
   retrieveProcessOrders,
@@ -38,11 +41,13 @@ export default function ProcessOrders(props: ProcessOrdersProps) {
         orderStatus: OrderStatus.FINISH,
       };
 
-      const confirmation = window.confirm("Did you receive your order?");
-      if (confirmation) {
+      const confirmed = await sweetConfirmProvider(
+        "Did you receive your order?",
+        "Yes, received",
+      );
+      if (confirmed) {
         const order = new OrderService();
         await order.updateOrder(input);
-        setOrderBuilder(new Date());
         setValue("3");
         setOrderBuilder(new Date());
       }
@@ -53,11 +58,12 @@ export default function ProcessOrders(props: ProcessOrdersProps) {
   };
 
   return (
-    <TabPanel value={"3"}>
+    <TabPanel value={"2"}>
       <Stack>
         {processOrders?.map((order: Order) => {
           return (
             <Box key={order._id} className={"order-main-box"}>
+              <Box className={"order-status-badge process"}>On the way</Box>
               <Box className={"order-box-scroll"}>
                 {order?.orderItems?.map((item: OrderItem) => {
                   const product: Product = order.productData.filter(
@@ -98,7 +104,7 @@ export default function ProcessOrders(props: ProcessOrdersProps) {
                   <p>₩{order.orderTotal}</p>
                 </Box>
                 <p className={"data-compl"}>
-                  {moment().format("YY-MM-DD HH:mm")}
+                  {moment(order.updatedAt).format("YY-MM-DD HH:mm")}
                 </p>
                 <Button
                   value={order._id}
@@ -112,13 +118,12 @@ export default function ProcessOrders(props: ProcessOrdersProps) {
             </Box>
           );
         })}
-        {!processOrders ||
-          (processOrders.length === 0 && (
-            <Box className={"order-empty"}>
-              <img src={"/icons/noimage-list.svg"} alt="no orders" />
-              <span>No orders in process</span>
-            </Box>
-          ))}
+        {(!processOrders || processOrders.length === 0) && (
+          <Box className={"order-empty"}>
+            <img src={"/icons/noimage-list.svg"} alt="no orders" />
+            <span>No orders in process</span>
+          </Box>
+        )}
       </Stack>
     </TabPanel>
   );

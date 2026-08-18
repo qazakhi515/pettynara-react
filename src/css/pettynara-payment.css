@@ -1,0 +1,208 @@
+/* ============================================================
+   Pettynara — Payment modal
+   Rendered through a portal, so it cannot inherit the `.order-page`
+   scope — every rule here stands on its own.
+   ============================================================ */
+
+.pay-modal-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.pay-modal {
+  --pn-green: #066b4d;
+  --pn-green-2: #0b8b63;
+  --pn-mint: #eef9f3;
+  --pn-border: #e8eee9;
+  --pn-text: #16231f;
+  --pn-muted: #68756f;
+
+  width: 100%;
+  max-width: 420px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 26px;
+  gap: 14px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(6, 107, 77, 0.28);
+  font-family: "Poppins", "DM Sans", sans-serif;
+  color: var(--pn-text);
+  outline: none;
+}
+
+/* ---------- head ---------- */
+.pay-modal .pay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--pn-border);
+}
+.pay-modal .pay-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.pay-modal .pay-title .MuiSvgIcon-root {
+  color: var(--pn-green);
+  font-size: 21px;
+}
+.pay-modal .pay-amount {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--pn-green);
+}
+
+/* ---------- demo notice ---------- */
+.pay-modal .pay-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #fff6ec;
+  border: 1px solid #ffd9b8;
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8a5320;
+}
+.pay-modal .pay-demo-btn {
+  border: 1px solid #e0a970;
+  background: #ffffff;
+  color: #8a5320;
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.pay-modal .pay-demo-btn:hover {
+  background: #fff1e0;
+}
+
+/* ---------- fields ---------- */
+.pay-modal .pay-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.pay-modal .pay-field label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--pn-muted);
+}
+.pay-modal .pay-input {
+  width: 100%;
+  height: 46px;
+  padding: 12px 14px;
+  background: #f7faf8;
+  border: 1px solid var(--pn-border);
+  border-radius: 12px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.4px;
+  color: var(--pn-text);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.pay-modal .pay-input:focus {
+  border-color: var(--pn-green-2);
+}
+.pay-modal .pay-input::placeholder {
+  color: #a9b6af;
+  letter-spacing: 0.6px;
+}
+
+.pay-modal .pay-row {
+  display: flex;
+  gap: 12px;
+}
+
+/* ---------- remember ---------- */
+.pay-modal .pay-remember {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--pn-muted);
+  cursor: pointer;
+}
+.pay-modal .pay-remember input {
+  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--pn-green);
+  cursor: pointer;
+}
+
+/* ---------- inline error ---------- */
+.pay-modal .pay-error {
+  padding: 11px 14px;
+  background: #ffeae4;
+  border: 1px solid #ffc4b4;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #b8391d;
+}
+
+/* SweetAlert2 sits at z-index 1060, the MUI modal at 1300 — without this an
+   alert fired while the payment modal is open renders behind the backdrop and
+   the user sees nothing happen. */
+.swal2-container {
+  z-index: 2000 !important;
+}
+
+/* ---------- submit ---------- */
+.pay-modal .pay-submit.MuiButton-root {
+  height: 50px;
+  border-radius: 14px;
+  background: var(--pn-green);
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: none;
+  box-shadow: 0 10px 24px rgba(6, 107, 77, 0.24);
+}
+.pay-modal .pay-submit.MuiButton-root:hover {
+  background: var(--pn-green-2);
+}
+.pay-modal .pay-submit.MuiButton-root.Mui-disabled {
+  background: #b9cfc5;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+/* ---------- foot ---------- */
+.pay-modal .pay-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--pn-muted);
+}
+.pay-modal .pay-foot .MuiSvgIcon-root {
+  font-size: 15px;
+  color: var(--pn-green);
+}
+
+@media (max-width: 420px) {
+  .pay-modal {
+    padding: 20px;
+  }
+  .pay-modal .pay-row {
+    flex-direction: column;
+  }
+}

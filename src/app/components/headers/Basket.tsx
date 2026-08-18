@@ -9,9 +9,9 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useHistory } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
 import { Messages, serverApi } from "../../../lib/config";
-import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import { sweetFailureProvider } from "../../../lib/sweetAlert";
+import { calcTotals } from "../../../lib/utils/price";
 import { useGlobals } from "../hooks/useGlobals";
-import OrderService from "../../services/OrdersService";
 interface BasketProps {
   cartItems: CartItem[];
   onAdd: (item: CartItem) => void;
@@ -22,14 +22,9 @@ interface BasketProps {
 
 export default function Basket(props: BasketProps) {
   const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = props;
-  const { authMember, setOrderBuilder } = useGlobals();
+  const { authMember } = useGlobals();
   const history = useHistory();
-  const itemsPrice: number = cartItems.reduce(
-    (a: number, c: CartItem) => a + c.quantity * c.price,
-    0,
-  );
-  const shippingCost = itemsPrice < 100 ? 5 : 0;
-  const totalPrice = (itemsPrice + shippingCost).toFixed(1);
+  const { itemsPrice, shippingCost, totalPrice } = calcTotals(cartItems);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -42,22 +37,14 @@ export default function Basket(props: BasketProps) {
     setAnchorEl(null);
   };
 
-  const proceedOrderHandler = async () => {
-    try {
-      handleClose();
-      if (!authMember) throw new Error(Messages.error2);
-
-      const order = new OrderService();
-      await order.createOrder(cartItems);
-
-      onDeleteAll();
-
-      setOrderBuilder(new Date());
-      history.push("/orders");
-    } catch (err) {
-      console.log("first", err);
-      sweetErrorHandling(err).then();
+  // the order itself is created on the checkout page — this only opens it
+  const goToCheckoutHandler = () => {
+    handleClose();
+    if (!authMember) {
+      sweetFailureProvider(Messages.error2, true);
+      return;
     }
+    history.push("/checkout", { mode: "cart" });
   };
   return (
     <Box className={"hover-line"}>
@@ -166,14 +153,14 @@ export default function Basket(props: BasketProps) {
           {cartItems.length !== 0 ? (
             <Box className={"basket-order"}>
               <span className={"price"}>
-                Total: ₩{totalPrice} ({itemsPrice} + {shippingCost})
+                Total: ₩{totalPrice.toFixed(1)} ({itemsPrice} + {shippingCost})
               </span>
               <Button
-                onClick={proceedOrderHandler}
+                onClick={goToCheckoutHandler}
                 startIcon={<ShoppingCartIcon />}
                 variant={"contained"}
               >
-                Order
+                Checkout
               </Button>
             </Box>
           ) : (

@@ -348,6 +348,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .pic-price {
@@ -359,7 +361,7 @@
 .pic-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   color: #6b7a72;
 }
 
@@ -375,6 +377,25 @@
 }
 .pic-cart:hover {
   background: #cdeadd;
+}
+
+.pic-buy {
+  border: none;
+  background: #1f9d76;
+  color: #ffffff;
+  border-radius: 10px;
+  height: 36px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+.pic-buy:hover {
+  background: #178462;
+  transform: translateY(-1px);
 }
 
 .pets-empty {

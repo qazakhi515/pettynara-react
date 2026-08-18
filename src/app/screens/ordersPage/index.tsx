@@ -19,7 +19,21 @@ import { setPausedOrders, setProcessOrders, setFinishedOrders } from "./slice";
 import "../../../css/order.css";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
+import { T } from "../../../lib/types/common";
+import {
+  sweetErrorHandling,
+  sweetTopSmallSuccessAlert,
+} from "../../../lib/sweetAlert";
+import {
+  clearSavedCard,
+  formatCardNumber,
+  formatExpiry,
+  maskCard,
+  readSavedCard,
+  saveCard,
+  SavedCard,
+} from "../../../lib/utils/card";
 import OrderService from "../../services/OrdersService";
 import { useGlobals } from "../../components/hooks/useGlobals";
 
@@ -63,6 +77,46 @@ export default function OrdersPage() {
 
   const handleChange = (e: SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  /** SAVED CARD — only the holder, the expiry and the last 4 digits are ever
+   *  stored; the full number and the CVV stay in this component's state. **/
+  const [savedCard, setSavedCard] = useState<SavedCard | null>(() =>
+    readSavedCard(),
+  );
+  const [cardNumber, setCardNumber] = useState<string>("");
+  const [cardExpiry, setCardExpiry] = useState<string>(
+    () => readSavedCard()?.expiry ?? "",
+  );
+  const [cardCvv, setCardCvv] = useState<string>("");
+  const [cardHolder, setCardHolder] = useState<string>(
+    () => readSavedCard()?.holder ?? "",
+  );
+
+  const saveCardHandler = () => {
+    try {
+      const isFulfill =
+        cardNumber !== "" && cardExpiry !== "" && cardHolder !== "";
+      if (!isFulfill) throw new Error(Messages.error3);
+
+      saveCard(cardHolder, cardExpiry, cardNumber);
+      setSavedCard(readSavedCard());
+      setCardNumber("");
+      setCardCvv("");
+      sweetTopSmallSuccessAlert("Card saved on this device", 1400);
+    } catch (err) {
+      console.log(err);
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  const forgetCardHandler = () => {
+    clearSavedCard();
+    setSavedCard(null);
+    setCardNumber("");
+    setCardExpiry("");
+    setCardCvv("");
+    setCardHolder("");
   };
 
   return (
@@ -158,9 +212,32 @@ export default function OrdersPage() {
               <CreditCardIcon /> Payment Method
             </span>
 
+            <span className={"payment-note"}>
+              Demo only — please don't enter a real card. Nothing is sent to the
+              server; only the name, expiry and last 4 digits stay on this
+              device.
+            </span>
+
+            {savedCard && (
+              <Box className={"saved-card-row"}>
+                <span>{maskCard(savedCard.last4)}</span>
+                <button className={"forget-card"} onClick={forgetCardHandler}>
+                  Forget
+                </button>
+              </Box>
+            )}
+
             <input
               className={"card-input"}
-              placeholder="Card number : **** 4090 2002 7495"
+              value={cardNumber}
+              onChange={(e: T) => setCardNumber(formatCardNumber(e.target.value))}
+              autoComplete="off"
+              inputMode="numeric"
+              placeholder={
+                savedCard
+                  ? `Card number : ${maskCard(savedCard.last4)}`
+                  : "Card number : 0000 0000 0000 0000"
+              }
             />
 
             <Box
@@ -170,11 +247,38 @@ export default function OrdersPage() {
                 justifyContent: "space-between",
               }}
             >
-              <input className={"card-half-input"} placeholder="07 / 24" />
-              <input className={"card-half-input"} placeholder="CVV : 010" />
+              <input
+                className={"card-half-input"}
+                value={cardExpiry}
+                onChange={(e: T) => setCardExpiry(formatExpiry(e.target.value))}
+                autoComplete="off"
+                inputMode="numeric"
+                placeholder="MM / YY"
+              />
+              <input
+                className={"card-half-input"}
+                type="password"
+                value={cardCvv}
+                onChange={(e: T) =>
+                  setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                }
+                autoComplete="off"
+                inputMode="numeric"
+                placeholder="CVV"
+              />
             </Box>
 
-            <input className={"card-input"} placeholder="Justin Robertson" />
+            <input
+              className={"card-input"}
+              value={cardHolder}
+              onChange={(e: T) => setCardHolder(e.target.value)}
+              autoComplete="off"
+              placeholder="Cardholder name"
+            />
+
+            <button className={"save-card"} onClick={saveCardHandler}>
+              Save card
+            </button>
 
             <Box className={"cards-box"}>
               <img src={"/icons/western-card.svg"} alt="western union" />

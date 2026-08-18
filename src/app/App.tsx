@@ -3,6 +3,7 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import HomePage from "./screens/homePage";
 import ProductsPage from "./screens/productPage";
 import OrdersPage from "./screens/ordersPage";
+import CheckoutPage from "./screens/checkoutPage";
 import UserPage from "./screens/userPage";
 import HomeNavbar from "./components/headers/HomeNavbar";
 import OtherNavbar from "./components/headers/OtherNavbar";
@@ -89,6 +90,15 @@ function App() {
       <Switch>
         <Route path="/products">
           <ProductsPage onAdd={onAdd} />
+        </Route>
+        <Route path="/checkout">
+          <CheckoutPage
+            cartItems={cartItems}
+            onAdd={onAdd}
+            onRemove={onRemove}
+            onDelete={onDelete}
+            onDeleteAll={onDeleteAll}
+          />
         </Route>
         <Route path="/orders">
           <OrdersPage />
