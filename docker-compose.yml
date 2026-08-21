@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: pettynara-web
+    restart: unless-stopped
+    # Konteyner ichida nginx 80 da, tashqarida faqat localhost:4004.
+    # "4004:80" deb yozilsa Docker UFW ni chetlab o'tib portni
+    # internetga ochib qo'yardi — host nginx orqali chiqaramiz.
+    ports:
+      - "127.0.0.1:4004:80"

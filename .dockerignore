@@ -1,0 +1,11 @@
+node_modules
+build
+.git
+.gitignore
+.DS_Store
+README.md
+AGENTS.md
+SKILLS.md
+pettynara-ui
+.vscode
+.claude
