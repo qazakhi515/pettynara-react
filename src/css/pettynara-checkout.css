@@ -172,6 +172,26 @@
   font-weight: 700;
 }
 
+/* animals: fixed quantity, no stepper — keeps the same footprint as the
+   stepper so the line items stay aligned */
+.checkout-page .checkout-qty-fixed {
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  min-width: 74px;
+  height: 38px;
+  padding: 0 10px;
+}
+.checkout-page .checkout-qty-note {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pn-green);
+  opacity: 0.75;
+  line-height: 1;
+}
+
 .checkout-page .checkout-line-total {
   min-width: 84px;
   text-align: right;
@@ -348,8 +368,56 @@
 @media (max-width: 640px) {
   .checkout-page .checkout-line {
     flex-wrap: wrap;
+    gap: 12px;
   }
   .checkout-page .checkout-line-total {
     min-width: auto;
+  }
+
+  /* photo + name take the first line, the stepper and the amount the second,
+     so a long pet name never squeezes the price to two characters */
+  .checkout-page .checkout-line-info {
+    flex-basis: calc(100% - 78px);
+  }
+  .checkout-page .checkout-qty,
+  .checkout-page .checkout-qty-fixed {
+    order: 3;
+  }
+  .checkout-page .checkout-line-total {
+    order: 4;
+    margin-left: auto;
+    font-size: 17px;
+  }
+  .checkout-page .checkout-line-remove {
+    order: 5;
+    width: 34px;
+    height: 34px;
+  }
+  .checkout-page .checkout-qty-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .checkout-page {
+    padding: 24px 0 40px;
+  }
+  .checkout-page .checkout-heading h1 {
+    font-size: 24px;
+  }
+  .checkout-page .checkout-card {
+    padding: 16px;
+  }
+  .checkout-page .checkout-lines {
+    max-height: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .checkout-page .checkout-line-img {
+    width: 54px;
+    height: 54px;
+  }
+  .checkout-page .checkout-line-info {
+    flex-basis: calc(100% - 66px);
   }
 }

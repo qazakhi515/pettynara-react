@@ -56,6 +56,20 @@
   gap: 26px;
 }
 
+/* the inline row of page links — swapped for the burger drawer on narrow screens */
+.pettynara-navbar .nav-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 26px;
+}
+
+/* shown only below the burger breakpoint (see the responsive block at the end) */
+.pettynara-navbar .nav-burger {
+  display: none;
+  color: #2c3a34;
+}
+
 .pettynara-navbar a {
   text-decoration: none;
 }
@@ -256,4 +270,154 @@
   height: 260px;
   display: flex;
   flex-direction: column;
+}
+
+/* ===== Mobile drawer ===== */
+.nav-drawer-inner {
+  width: 270px;
+  max-width: 80vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px 22px;
+  background: #ffffff;
+}
+
+.nav-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eef2ef;
+}
+
+.nav-drawer-head .brand-name {
+  font-family: "Poppins";
+  font-weight: 800;
+  font-size: 21px;
+  color: #1f9d76;
+}
+
+.nav-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 14px;
+  flex: 1;
+}
+
+.nav-drawer-links a,
+.nav-drawer-links .smart-link {
+  padding: 12px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: "Poppins";
+  font-weight: 500;
+  font-size: 16px;
+  color: #2c3a34;
+  cursor: pointer;
+}
+
+.nav-drawer-links a:active,
+.nav-drawer-links .smart-link:active {
+  background: #f1f7f4;
+}
+
+.nav-drawer-links .underline {
+  color: #1f9d76 !important;
+  background: #e8f6ef;
+  font-weight: 700;
+}
+
+.nav-drawer-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid #eef2ef;
+}
+
+/* ===== Responsive ===== */
+
+/* Seven links plus the basket and the auth buttons stop fitting on one row
+   well before tablet width — below this the row becomes a burger drawer. */
+@media (max-width: 900px) {
+  .pettynara-navbar {
+    height: 64px;
+  }
+  .pettynara-navbar .nav-links {
+    display: none;
+  }
+  .pettynara-navbar .nav-burger {
+    display: inline-flex;
+    order: 3; /* keep the burger last: basket, avatar, then menu */
+  }
+  .pettynara-navbar .links {
+    gap: 4px;
+  }
+  .pettynara-navbar .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    font-size: 20px;
+  }
+  .pettynara-navbar .brand-name {
+    font-size: 21px;
+  }
+  .pettynara-navbar .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  /* the top bar keeps only the basket + avatar; Login/Sign Up move into the
+     drawer, where they have room for full-size tap targets */
+  .pettynara-navbar .auth-buttons {
+    display: none;
+  }
+}
+
+/* Phones: the 450px basket dropdown is wider than the screen itself */
+@media (max-width: 520px) {
+  .basket-frame {
+    width: calc(100vw - 24px);
+    max-width: 450px;
+  }
+  .basket-info-box .product-img {
+    width: 46px;
+    height: 46px;
+    border-radius: 22px;
+  }
+  .basket-info-box .product-name {
+    margin-left: 9px;
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 22px;
+    /* long pet names must not push the price and the ✕ off-screen */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .basket-info-box .product-price {
+    width: auto;
+    padding-right: 26px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .basket-frame .basket-order {
+    height: auto;
+    padding: 10px 0;
+    gap: 8px;
+  }
+  .basket-order .price {
+    width: auto;
+    font-size: 16px;
+  }
+}
+
+/* Very narrow phones: drop the wordmark, the paw alone carries the brand */
+@media (max-width: 380px) {
+  .pettynara-navbar .brand-name {
+    display: none;
+  }
 }

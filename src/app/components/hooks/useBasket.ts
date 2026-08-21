@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CartItem } from "../../../lib/types/search";
+import { isUniquePet } from "../../../lib/utils/cart";
 
 const useBasket = () => {
   const cartJson: string | null = localStorage.getItem("cartData");
@@ -11,6 +12,8 @@ const useBasket = () => {
       (item: CartItem) => item._id === input._id,
     );
     if (exist) {
+      // adding the same animal again is a no-op: each listing is one pet
+      if (isUniquePet(input)) return;
       const cartUpdate = cartItems.map((item: CartItem) =>
         item._id === input._id
           ? { ...exist, quantity: exist.quantity + 1 }

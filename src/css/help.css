@@ -180,3 +180,52 @@
   line-height: 26px;
   color: #4f547b;
 }
+
+/* ===== Responsive ===== */
+
+/* The tab strip is laid out for a 75% wide desktop column; below this it needs
+   the full width and has to be able to scroll sideways rather than squash. */
+@media (max-width: 900px) {
+  .help-page .help-container {
+    margin-top: 26px;
+    margin-bottom: 34px;
+  }
+  .help-page .css-1gsv261 {
+    width: 100%;
+  }
+  .help-page .help-menu {
+    height: auto;
+  }
+  .help-page .help-menu .table-list,
+  .help-page .help-menu .table_list {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .help-page .admin-letter-box {
+    padding: 30px 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .help-page .admin-letter-box {
+    padding: 22px 16px;
+  }
+  .help-page .admin-letter-frame span {
+    font-size: 20px;
+    line-height: 25px;
+  }
+  .help-page .rules-box,
+  .help-page .accordion-menu {
+    padding: 16px;
+  }
+  /* under 16px iOS zooms the page in when a field takes focus */
+  .help-page .admin-letter-frame .admin-input-box input,
+  .help-page .admin-letter-frame .admin-input-box textarea {
+    padding: 14px;
+    font-size: 16px;
+  }
+  .help-page .admin-letter-frame .admin-input-box input {
+    height: 52px;
+  }
+}

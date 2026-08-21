@@ -11,6 +11,7 @@ import { CartItem } from "../../../lib/types/search";
 import { Messages, serverApi } from "../../../lib/config";
 import { sweetFailureProvider } from "../../../lib/sweetAlert";
 import { calcTotals } from "../../../lib/utils/price";
+import { isUniquePet } from "../../../lib/utils/cart";
 import { useGlobals } from "../hooks/useGlobals";
 interface BasketProps {
   cartItems: CartItem[];
@@ -132,18 +133,21 @@ export default function Basket(props: BasketProps) {
                     <p className={"product-price"}>
                       {item.quantity} x {item.price}
                     </p>
+                    {/* animals come one to a listing — no stepper for them */}
                     <Box sx={{ minWidth: 120 }}>
-                      <div className="col-2">
-                        <button
-                          onClick={() => onRemove(item)}
-                          className="remove"
-                        >
-                          -
-                        </button>{" "}
-                        <button onClick={() => onAdd(item)} className="add">
-                          +
-                        </button>
-                      </div>
+                      {!isUniquePet(item) && (
+                        <div className="col-2">
+                          <button
+                            onClick={() => onRemove(item)}
+                            className="remove"
+                          >
+                            -
+                          </button>{" "}
+                          <button onClick={() => onAdd(item)} className="add">
+                            +
+                          </button>
+                        </div>
+                      )}
                     </Box>
                   </Box>
                 );

@@ -11,6 +11,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { CartItem } from "../../../lib/types/search";
 import { Messages, serverApi } from "../../../lib/config";
 import { calcTotals } from "../../../lib/utils/price";
+import { isUniquePet } from "../../../lib/utils/cart";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { useGlobals } from "../../components/hooks/useGlobals";
 import OrderService from "../../services/OrdersService";
@@ -84,6 +85,7 @@ export default function CheckoutPage(props: CheckoutPageProps) {
 
   /** HANDLERS **/
   const increaseHandler = (item: CartItem) => {
+    if (isUniquePet(item)) return; // stepper is hidden for pets, but never stack one
     if (mode === "buyNow") setBuyNowQty((q) => q + 1);
     else onAdd(item);
   };
@@ -162,25 +164,35 @@ export default function CheckoutPage(props: CheckoutPageProps) {
                       </span>
                     </Box>
 
-                    <Box className={"checkout-qty"}>
-                      <button
-                        className={"checkout-qty-btn"}
-                        onClick={() => decreaseHandler(item)}
-                        aria-label="decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className={"checkout-qty-value"}>
-                        {item.quantity}
-                      </span>
-                      <button
-                        className={"checkout-qty-btn"}
-                        onClick={() => increaseHandler(item)}
-                        aria-label="increase quantity"
-                      >
-                        +
-                      </button>
-                    </Box>
+                    {/* a listed animal is one individual — no stepper, the
+                        quantity is fixed at 1. Accessories are ordinary stock
+                        and keep the +/− controls. */}
+                    {isUniquePet(item) ? (
+                      <Box className={"checkout-qty checkout-qty-fixed"}>
+                        <span className={"checkout-qty-value"}>1</span>
+                        <span className={"checkout-qty-note"}>only one</span>
+                      </Box>
+                    ) : (
+                      <Box className={"checkout-qty"}>
+                        <button
+                          className={"checkout-qty-btn"}
+                          onClick={() => decreaseHandler(item)}
+                          aria-label="decrease quantity"
+                        >
+                          −
+                        </button>
+                        <span className={"checkout-qty-value"}>
+                          {item.quantity}
+                        </span>
+                        <button
+                          className={"checkout-qty-btn"}
+                          onClick={() => increaseHandler(item)}
+                          aria-label="increase quantity"
+                        >
+                          +
+                        </button>
+                      </Box>
+                    )}
 
                     <span className={"checkout-line-total"}>
                       ₩{item.price * item.quantity}

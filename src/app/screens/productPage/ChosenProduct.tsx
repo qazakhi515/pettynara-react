@@ -182,6 +182,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
       name: chosenProduct.productName,
       price: chosenProduct.productPrice,
       image: chosenProduct.productImages?.[0] ?? "",
+      productCollection: chosenProduct.productCollection,
     });
     sweetTopSmallSuccessAlert("Added to your basket!", 1200);
   };

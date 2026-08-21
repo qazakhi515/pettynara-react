@@ -670,5 +670,53 @@
   }
   .order-page .total-price-box {
     justify-content: flex-start;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  /* The footer packs eight elements into one row — three label/value pairs
+     with separator icons between them, then the buttons. On a phone the pairs
+     become stacked rows (label left, amount right) and the separator icons are
+     redundant, so they go. `.total-price-box` already wraps, so giving the
+     totals and the date a full-width basis leaves the buttons sharing the
+     last line. */
+  .order-page .total-price-box .box-total {
+    flex-basis: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 7px 12px;
+  }
+  .order-page .total-price-box .box-total img {
+    display: none;
+  }
+  .order-page .total-price-box .box-total p {
+    font-size: 13.5px;
+  }
+  .order-page .total-price-box .box-total p:nth-child(even) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .order-page .total-price-box .data-compl {
+    flex-basis: 100%;
+  }
+  .order-page .total-price-box .MuiButton-root {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+  }
+
+  .order-page .order-status-badge {
+    margin: 13px 14px 0;
+  }
+  .order-page .order-main-box .order-box-scroll {
+    padding: 8px 14px 4px;
+  }
+}
+
+/* Very narrow phones: two buttons side by side stop being comfortable taps */
+@media (max-width: 380px) {
+  .order-page .total-price-box .MuiButton-root {
+    flex-basis: 100%;
   }
 }

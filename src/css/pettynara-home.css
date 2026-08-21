@@ -981,6 +981,26 @@
   }
 }
 
+/* Small phones: pet and helper cards carry a photo, a name, a price and a
+   badge — at ~170px wide that stops being readable, so they go full width.
+   Category tiles are just an icon and a word, so they stay two-up. */
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 30px;
+  }
+
+  .helper-row,
+  .pet-row,
+  .item-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pettynara-home .pet-video .pet-video-band {
+    /* a 16:9 band is a letterbox sliver on a narrow screen */
+    aspect-ratio: 4 / 3;
+  }
+}
+
 /* ===== Happy Tails video section (full-width landscape banner) ===== */
 
 .pettynara-home .pet-video {

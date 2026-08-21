@@ -14,6 +14,7 @@ import { serverApi } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../hooks/useGlobals";
 import Basket from "./Basket";
+import MobileNav from "./MobileNav";
 
 interface OtherNavbarProps {
   cartItems: CartItem[];
@@ -57,6 +58,8 @@ export default function OtherNavbar(props: OtherNavbarProps) {
           </NavLink>
         </Box>
         <Stack className="links">
+          {/* the row of links: replaced by the burger drawer on narrow screens */}
+          <Box className="nav-links">
           <Box className={"hover-line"}>
             <NavLink exact to="/" activeClassName={"underline"}>
               Home
@@ -96,6 +99,14 @@ export default function OtherNavbar(props: OtherNavbarProps) {
               </NavLink>
             </Box>
           ) : null}
+          </Box>
+
+          <MobileNav
+            setLoginOpen={setLoginOpen}
+            setSignupOpen={setSignupOpen}
+            handleLogoutRequest={handleLogoutRequest}
+          />
+
           <Basket
             cartItems={cartItems}
             onAdd={onAdd}

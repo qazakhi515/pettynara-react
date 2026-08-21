@@ -158,6 +158,7 @@ export default function Products(props: ProductsProps) {
       name: product.productName,
       price: product.productPrice,
       image: product.productImages?.[0] ?? "",
+      productCollection: product.productCollection,
     };
     // route state is lost on refresh — keep a copy for the checkout page
     sessionStorage.setItem("pettynara_checkout", JSON.stringify(item));
@@ -319,6 +320,7 @@ export default function Products(props: ProductsProps) {
                                 name: product.productName,
                                 price: product.productPrice,
                                 image: product.productImages?.[0] ?? "",
+                                productCollection: product.productCollection,
                               });
                             }}
                           >

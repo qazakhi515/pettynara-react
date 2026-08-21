@@ -417,6 +417,24 @@
 
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
+  /* The header is a flex row of two non-shrinking images (150px + 200px) with
+     52px of gaps around the title column. That is 402px of fixed width, so on
+     anything narrow the title column is crushed to nothing and its text spills
+     out underneath the right-hand illustration. Shrink the photo and let the
+     decorative image go as space runs out. */
+  .pets-head-top {
+    gap: 18px;
+  }
+  .pets-head-left {
+    width: 110px;
+    height: 110px;
+    border-width: 4px;
+  }
+  .pets-head-right {
+    width: 130px;
+    max-height: 130px;
+  }
+
   .pets-body {
     grid-template-columns: 1fr;
   }
@@ -436,11 +454,71 @@
 }
 
 @media (max-width: 640px) {
+  /* No room left for both images beside a 32px title — the right-hand one is
+     purely decorative (alt=""), so it is the one that goes. */
+  .pets-head-right {
+    display: none;
+  }
+  .pets-head-left {
+    width: 84px;
+    height: 84px;
+    border-width: 3px;
+  }
+  .pets-head-top {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .pets-subtitle {
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+
   .pets-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
   .pets-title {
     font-size: 32px;
+    /* "Accessories" is one long word — it must break rather than spill */
+    overflow-wrap: break-word;
+  }
+
+  /* two cards per row is the floor that still shows a usable photo */
+  .pets-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .pic-body {
+    padding: 12px;
+  }
+  .pic-name {
+    font-size: 15px;
+  }
+  /* 36px is a cramped tap target on glass — the cart and Buy Now buttons are
+     the two things a phone visitor actually presses here */
+  .pic-cart,
+  .pic-buy {
+    height: 44px;
+  }
+  .pic-cart {
+    width: 44px;
+  }
+  .pic-actions {
+    gap: 8px;
+  }
+  .pets-trust {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .pets-grid {
+    grid-template-columns: 1fr;
+  }
+  .pets-trust {
+    grid-template-columns: 1fr;
+  }
+  .pets-title {
+    font-size: 27px;
   }
 }

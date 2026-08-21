@@ -198,10 +198,43 @@
   color: var(--pn-green);
 }
 
-@media (max-width: 420px) {
-  .pay-modal {
-    padding: 20px;
+/* Phones: a modal floating in the middle gets covered by the keyboard as soon
+   as a field is focused. Dock it to the bottom instead — a sheet keeps the
+   active input just above the keyboard and can scroll on its own. */
+@media (max-width: 520px) {
+  .pay-modal-root {
+    align-items: flex-end;
+    padding: 0;
   }
+  .pay-modal {
+    max-width: 100%;
+    max-height: 94vh;
+    padding: 18px 16px;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -14px 40px rgba(6, 107, 77, 0.24);
+  }
+  /* grab handle, so it reads as a sheet rather than a clipped dialog */
+  .pay-modal::before {
+    content: "";
+    width: 38px;
+    height: 4px;
+    flex: none;
+    align-self: center;
+    margin-bottom: 2px;
+    border-radius: 3px;
+    background: #d6e2db;
+  }
+  .pay-modal .pay-notice {
+    font-size: 12px;
+  }
+  .pay-modal .pay-input {
+    /* iOS zooms the page in on focus when the font is under 16px */
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
   .pay-modal .pay-row {
     flex-direction: column;
   }

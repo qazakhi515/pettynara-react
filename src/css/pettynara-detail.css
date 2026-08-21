@@ -652,3 +652,76 @@
     font-size: 26px;
   }
 }
+
+/* Phones and small tablets: in a single column the price and the buy buttons
+   end up at the very bottom of a long page. Pin them to the viewport instead,
+   the way a mobile shop does — the seller card and the rest of the sidebar
+   stay in the normal flow below the content. */
+@media (max-width: 900px) {
+  .pd-buy {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 14px;
+    border: none;
+    border-top: 1px solid #e4ebe7;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.97);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 -6px 22px rgba(31, 157, 118, 0.12);
+    /* keep clear of the iOS home indicator */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  /* the page must be able to scroll past the bar */
+  .pet-detail {
+    padding-bottom: 92px;
+  }
+
+  .pd-buy .pd-price-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .pd-buy .pd-price {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+  .pd-buy .pd-price-label {
+    font-size: 11px;
+  }
+  /* favourite/share live in the gallery too — the bar is for buying */
+  .pd-buy .pd-icon-actions,
+  .pd-buy .pd-delivery,
+  .pd-buy .pd-interested {
+    display: none;
+  }
+
+  .pd-buy .pd-cta {
+    width: auto;
+    height: 46px;
+    margin: 0;
+    padding: 0 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 380px) {
+  .pd-buy .pd-cta {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  .pd-buy .pd-price {
+    font-size: 19px;
+  }
+}
