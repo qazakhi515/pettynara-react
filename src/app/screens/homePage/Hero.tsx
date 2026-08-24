@@ -1,9 +1,22 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Answers,
   computeMatches,
   MatchResult,
 } from "./smartMatch";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import ProductService from "../../services/ProductService";
+
+/** Smart Match runs on a local dataset, so its species labels have to be
+ *  translated back into catalogue collections. */
+const SPECIES_TO_COLLECTION: Record<string, ProductCollection> = {
+  Dog: ProductCollection.DOG,
+  Cat: ProductCollection.CAT,
+  Bird: ProductCollection.BIRD,
+  Fish: ProductCollection.FISH,
+  Rabbit: ProductCollection.RABBIT,
+};
 
 const SEARCH_TABS = ["Pets", "Items", "Helpers"];
 const FILTER_CHIPS = [
@@ -78,6 +91,7 @@ const STEPS: Step[] = [
 ];
 
 export default function Hero() {
+  const history = useHistory();
   const [activeTab, setActiveTab] = useState<string>("Pets");
   const [searchText, setSearchText] = useState<string>("");
 
@@ -105,6 +119,31 @@ export default function Hero() {
     setAnswers({});
     setStep(0);
     setResults(null);
+  };
+
+  /** Open a recommendation. The local dataset has no product id, so look the
+   *  pet up by name; when the catalogue has no such listing, fall back to the
+   *  species so the click still lands somewhere useful. */
+  const openMatch = async (m: MatchResult) => {
+    const collection = SPECIES_TO_COLLECTION[m.species];
+    try {
+      const found = await new ProductService().getProducts({
+        order: "createdAt",
+        page: 1,
+        limit: 1,
+        search: m.name,
+        ...(collection ? { productCollection: collection } : {}),
+      });
+      if (found.length) {
+        history.push(`/products/${found[0]._id}`);
+        return;
+      }
+    } catch (err) {
+      console.log("openMatch lookup failed:", err);
+    }
+    history.push(
+      collection ? `/products?collection=${collection}` : "/products",
+    );
   };
 
   return (
@@ -244,7 +283,14 @@ export default function Hero() {
                 </div>
               ) : (
                 results.map((m, i) => (
-                  <div key={m.name} className="sc-match">
+                  <div
+                    key={m.name}
+                    className="sc-match"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openMatch(m)}
+                    onKeyDown={(e) => e.key === "Enter" && openMatch(m)}
+                  >
                     <div
                       className="sc-match-photo"
                       style={{ backgroundImage: `url(${m.image})` }}
@@ -254,7 +300,7 @@ export default function Hero() {
                     <div className="sc-match-body">
                       <div className="sc-match-top">
                         <span className="sc-match-name">{m.name}</span>
-                        <span className="sc-score">{m.score}</span>
+                        <span className="sc-score">{m.score}%</span>
                       </div>
                       <span className="sc-match-label">{m.label}</span>
                       <div className="sc-reasons">

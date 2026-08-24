@@ -1,4 +1,4 @@
-import { serverApi } from "../../lib/config";
+import { Messages, serverApi } from "../../lib/config";
 import axios from "axios";
 import {
   LoginInput,
@@ -123,7 +123,12 @@ class MemberService {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const member: Member = result.data.member;
+      // The server now wraps the document as { member }, matching login and
+      // signup. Falling back to the bare body keeps this working against an
+      // older backend, so the two deploys do not have to land in lockstep.
+      const member: Member = result.data?.member ?? result.data;
+      if (!member?._id) throw new Error(Messages.error1);
+
       localStorage.setItem("memberData", JSON.stringify(member));
       return member;
     } catch (err) {

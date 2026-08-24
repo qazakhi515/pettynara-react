@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { collectionIsActive } from "../../../lib/utils/nav";
 import { Box, Button, Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -57,10 +59,18 @@ export default function MobileNav(props: MobileNavProps) {
             <NavLink exact to="/" activeClassName={"underline"}>
               Home
             </NavLink>
-            <NavLink to="/products?collection=DOG" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=DOG"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.DOG)}
+            >
               Dogs
             </NavLink>
-            <NavLink to="/products?collection=CAT" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=CAT"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.CAT)}
+            >
               Cats
             </NavLink>
             <NavLink to="/helpers" activeClassName={"underline"}>

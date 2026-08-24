@@ -466,6 +466,8 @@
 }
 
 .sc-match {
+  /* each recommendation opens the pet — see Hero.tsx openMatch */
+  cursor: pointer;
   display: flex;
   gap: 10px;
   padding: 10px;
@@ -473,6 +475,17 @@
   border-radius: 14px;
   background: #ffffff;
   animation: sc-pop 260ms ease both;
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease;
+}
+.sc-match:hover {
+  border-color: #1f9d76;
+  box-shadow: 0 10px 22px rgba(31, 157, 118, 0.14);
+  transform: translateY(-2px);
+}
+.sc-match:focus-visible {
+  outline: 2px solid #066b4d;
+  outline-offset: 2px;
 }
 
 .sc-match-photo {
@@ -588,6 +601,8 @@
 }
 
 .cat-card {
+  /* the whole tile navigates on click */
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;

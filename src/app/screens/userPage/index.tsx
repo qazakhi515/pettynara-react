@@ -15,12 +15,9 @@ import { useGlobals } from "../../components/hooks/useGlobals";
 import { useHistory } from "react-router-dom";
 import { MemberType } from "../../../lib/enums/member.enum";
 import { serverApi } from "../../../lib/config";
-import ProductService from "../../services/ProductService";
+import LikeService from "../../services/LikeService";
 import { Product } from "../../../lib/types/product";
-import {
-  getFavorites,
-  subscribeFavorites,
-} from "../../components/favorite/favStore";
+import { subscribeFavorites } from "../../components/favorite/favStore";
 import FavoriteButton from "../../components/favorite/FavoriteButton";
 import "../../../css/userPage.css";
 
@@ -28,34 +25,28 @@ export default function UserPage() {
   const history = useHistory();
   const { authMember } = useGlobals();
 
-  // Liked / saved pets — favorites are stored as product ids in localStorage,
-  // so we fetch each one to show it on the profile.
+  // Liked / saved pets. The server returns the full products in one call, so
+  // this no longer fans out into one request per liked id.
   const [savedPets, setSavedPets] = useState<Product[]>([]);
 
   useEffect(() => {
-    const loadFavorites = async () => {
-      const ids = getFavorites();
-      if (ids.length === 0) {
+    const loadSaved = async () => {
+      if (!authMember) {
         setSavedPets([]);
         return;
       }
-      const service = new ProductService();
-      const results = await Promise.allSettled(
-        ids.map((id) => service.getProduct(id)),
-      );
-      const products = results
-        .filter(
-          (r): r is PromiseFulfilledResult<Product> =>
-            r.status === "fulfilled",
-        )
-        .map((r) => r.value);
-      setSavedPets(products);
+      try {
+        setSavedPets(await new LikeService().getMyLikes());
+      } catch (err) {
+        console.log("Couldn't load saved pets:", err);
+        setSavedPets([]);
+      }
     };
 
-    loadFavorites();
+    loadSaved();
     // refresh when a pet is liked/unliked anywhere in the app
-    return subscribeFavorites(loadFavorites);
-  }, []);
+    return subscribeFavorites(loadSaved);
+  }, [authMember]);
 
   if (!authMember) history.push("/");
   return (

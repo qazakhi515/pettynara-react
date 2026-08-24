@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { isFavorite, persistFavorite, subscribeFavorites } from "./favStore";
+import { isFavorite, subscribeFavorites, toggleFavorite } from "./favStore";
 import {
   sweetTopSmallSuccessAlert,
   sweetFailureProvider,
 } from "../../../lib/sweetAlert";
+import { Messages } from "../../../lib/config";
+import { useGlobals } from "../hooks/useGlobals";
 import "../../../css/pettynara-favorite.css";
 
 interface FavoriteButtonProps {
@@ -18,6 +20,7 @@ export default function FavoriteButton({
   className = "",
   onToggle,
 }: FavoriteButtonProps) {
+  const { authMember } = useGlobals();
   const [fav, setFav] = useState<boolean>(() => isFavorite(id));
   const [busy, setBusy] = useState<boolean>(false);
   const [pop, setPop] = useState<boolean>(false);
@@ -32,6 +35,14 @@ export default function FavoriteButton({
   const handleClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+
+    // A like belongs to an account. The server rejects anonymous calls too —
+    // this only saves the round trip and explains why nothing happened.
+    if (!authMember) {
+      sweetFailureProvider(Messages.error2, true);
+      return;
+    }
+
     // spam / double-click guard
     if (lockRef.current || busy) return;
     lockRef.current = true;
@@ -46,17 +57,16 @@ export default function FavoriteButton({
     window.setTimeout(() => setPop(false), 300);
 
     try {
-      // persist (localStorage today; swap for a backend call later)
-      persistFavorite(id, next);
-      onToggle?.(next);
+      const settled = await toggleFavorite(id);
+      setFav(settled);
+      onToggle?.(settled);
       sweetTopSmallSuccessAlert(
-        next ? "Added to favorites ❤️" : "Removed from favorites",
-        1200
+        settled ? "Added to favorites ❤️" : "Removed from favorites",
+        1200,
       );
     } catch (err) {
-      // rollback on error
+      // rollback on error — the server state never changed
       setFav(prev);
-      persistFavorite(id, prev);
       sweetFailureProvider("Couldn't update favorites — try again");
     } finally {
       window.setTimeout(() => {

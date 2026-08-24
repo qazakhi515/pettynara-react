@@ -1,3 +1,16 @@
+/* Form controls are sized as width:100% with their own padding all over the
+   app. Under the default content-box that padding is added *outside* the
+   declared width, so inputs render wider than the card holding them and their
+   border spills past it. Scoped to form elements on purpose: a universal
+   `* { box-sizing }` reset would also re-flow every existing layout, which is
+   not a change worth making to a live site for this bug. */
+input,
+textarea,
+select,
+button {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

@@ -12,6 +12,11 @@ import { sweetErrorHandling } from "./../../../lib/sweetAlert";
 import { LoginInput, MemberInput } from "../../../lib/types/member";
 import MemberService from "../../services/memberService";
 import { useGlobals } from "../hooks/useGlobals";
+import {
+  isValidPhone,
+  sanitizePhone,
+  PHONE_ERROR,
+} from "../../../lib/utils/phone";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -57,7 +62,9 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   };
 
   const handlePhone = (e: T) => {
-    setMemberPhone(e.target.value);
+    // Strip letters and symbols as they are typed — the field only ever holds
+    // digits and the separators people naturally use.
+    setMemberPhone(sanitizePhone(e.target.value));
   };
 
   const handlePassword = (e: T) => {
@@ -78,6 +85,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const isFulfill =
         memberNick !== "" && memberPhone !== "" && memberPassword !== "";
       if (!isFulfill) throw new Error(Messages.error3);
+      if (!isValidPhone(memberPhone)) throw new Error(PHONE_ERROR);
 
       const signupInput: MemberInput = {
         memberNick: memberNick,
@@ -153,7 +161,9 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 id="outlined-basic"
                 label="phone number"
                 variant="outlined"
+                value={memberPhone}
                 onChange={handlePhone}
+                inputProps={{ inputMode: "tel", maxLength: 20 }}
               />
               <TextField
                 id="outlined-basic"

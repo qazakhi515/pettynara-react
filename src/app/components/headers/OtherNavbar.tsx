@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { collectionIsActive } from "../../../lib/utils/nav";
 import { serverApi } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../hooks/useGlobals";
@@ -66,12 +68,20 @@ export default function OtherNavbar(props: OtherNavbarProps) {
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <NavLink to="/products?collection=DOG" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=DOG"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.DOG)}
+            >
               Dogs
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <NavLink to="/products?collection=CAT" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=CAT"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.CAT)}
+            >
               Cats
             </NavLink>
           </Box>
@@ -81,7 +91,10 @@ export default function OtherNavbar(props: OtherNavbarProps) {
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <NavLink to="/" activeClassName={"underline"}>
+            {/* `exact` is required: without it NavLink treats "/" as a prefix,
+                which every path matches, so this link stayed underlined on
+                every page — including while a category was selected. */}
+            <NavLink exact to="/" activeClassName={"underline"}>
               Smart Search
             </NavLink>
           </Box>

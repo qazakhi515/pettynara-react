@@ -1,5 +1,7 @@
 import { Box, Button, Container, Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { collectionIsActive } from "../../../lib/utils/nav";
 import { serverApi } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../hooks/useGlobals";
@@ -66,12 +68,20 @@ export default function HomeNavbar(props: HomeNavbarProps) {
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <NavLink to="/products?collection=DOG" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=DOG"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.DOG)}
+            >
               Dogs
             </NavLink>
           </Box>
           <Box className={"hover-line"}>
-            <NavLink to="/products?collection=CAT" activeClassName={"underline"}>
+            <NavLink
+              to="/products?collection=CAT"
+              activeClassName={"underline"}
+              isActive={collectionIsActive(ProductCollection.CAT)}
+            >
               Cats
             </NavLink>
           </Box>

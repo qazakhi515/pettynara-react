@@ -20,6 +20,10 @@ import { sweetErrorHandling, sweetTopSuccessAlert } from "../lib/sweetAlert";
 import { Messages } from "../lib/config";
 import MemberService from "./services/memberService";
 import { useGlobals } from "./components/hooks/useGlobals";
+import {
+  adoptGuestFavorites,
+  clearFavorites,
+} from "./components/favorite/favStore";
 
 function App() {
   const location = useLocation();
@@ -29,8 +33,18 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-  const { setAuthMember } = useGlobals();
+  const { authMember, setAuthMember } = useGlobals();
   const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = useBasket();
+
+  // Favorites belong to the account, so the cache follows the session: load it
+  // whenever someone is signed in (login *and* page refresh), drop it on the
+  // way out. adoptGuestFavorites also hands over anything liked before signing
+  // in, and falls through to a plain load when there is nothing pending — so
+  // one call covers both entry paths.
+  useEffect(() => {
+    if (authMember) adoptGuestFavorites();
+    else clearFavorites();
+  }, [authMember]);
   const [signupOpen, setSignupOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

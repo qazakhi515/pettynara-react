@@ -1,9 +1,7 @@
-import Badge from "@mui/material/Badge";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { Product, ProductInquiry } from "../../../lib/types/product";
 import { setProducts } from "./slice";
 import { createSelector, Dispatch } from "@reduxjs/toolkit";
@@ -304,12 +302,16 @@ export default function Products(props: ProductsProps) {
                           ₩{product.productPrice}
                         </span>
                         <div className="pic-actions">
-                          <Badge
-                            badgeContent={product.productViews}
-                            color="primary"
-                          >
-                            <RemoveRedEyeIcon sx={{ fontSize: 20 }} />
-                          </Badge>
+                          {/* Plain "eye + count", same as the home page. The
+                              MUI Badge floated the number over the icon and
+                              hid it entirely at zero, so a pet with no views
+                              showed a bare eye with no explanation. */}
+                          <span className="pic-views">
+                            <span role="img" aria-label="views">
+                              👁️
+                            </span>{" "}
+                            {product.productViews}
+                          </span>
                           <button
                             className="pic-cart"
                             onClick={(e) => {

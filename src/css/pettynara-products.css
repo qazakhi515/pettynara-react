@@ -365,6 +365,17 @@
   color: #6b7a72;
 }
 
+/* eye + count, matching .pet-stats on the home page */
+.pic-views {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: #4f6157;
+  white-space: nowrap;
+}
+
 .pic-cart {
   border: none;
   background: #e7f6ef;
@@ -494,17 +505,34 @@
   .pic-name {
     font-size: 15px;
   }
-  /* 36px is a cramped tap target on glass — the cart and Buy Now buttons are
-     the two things a phone visitor actually presses here */
-  .pic-cart,
-  .pic-buy {
-    height: 44px;
-  }
-  .pic-cart {
-    width: 44px;
+  /* Two cards per row leaves roughly 140px of usable card. Sharing that line
+     between the views badge, the cart button and "⚡ Buy Now" leaves the label
+     about 57px — it gets clipped. Stack instead:
+         ₩1,200
+         [👁 3] [🛒]
+         [   ⚡ Buy Now   ]
+     Buy Now on its own row means the label can never be cut off, whatever the
+     price length or font ends up being. */
+  .pic-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
   .pic-actions {
+    width: 100%;
+    flex-wrap: wrap;
     gap: 8px;
+  }
+  .pic-buy {
+    flex: 1 0 100%;
+    height: 44px;
+    padding: 0 10px;
+  }
+  /* 36px is a cramped tap target on glass */
+  .pic-cart {
+    width: 44px;
+    height: 44px;
+    flex: none;
   }
   .pets-trust {
     grid-template-columns: repeat(2, 1fr);

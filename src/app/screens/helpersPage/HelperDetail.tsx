@@ -4,6 +4,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { sweetTopSmallSuccessAlert } from "../../../lib/sweetAlert";
 import { findHelper } from "../../../lib/data/helpers";
 import "../../../css/pettynara-helpers.css";
 
@@ -11,6 +13,17 @@ export default function HelperDetail() {
   const { helperId } = useParams<{ helperId: string }>();
   const history = useHistory();
   const helper = findHelper(helperId);
+
+  /** Copy rather than dial. A tel: link hands the number straight to the phone
+   *  app on a mis-tap, and these are other people's personal numbers — the
+   *  visitor should be the one who decides to place the call. */
+  const copyPhone = () => {
+    if (!helper) return;
+    navigator.clipboard
+      ?.writeText(helper.phone)
+      .then(() => sweetTopSmallSuccessAlert("Phone number copied!", 1200))
+      .catch(() => {});
+  };
 
   if (!helper) {
     return (
@@ -84,7 +97,11 @@ export default function HelperDetail() {
           <div className="hd-contact-card">
             <h3>Contact &amp; Booking</h3>
 
-            <a className="hd-row hd-row-link" href={`tel:${helper.phone}`}>
+            <button
+              type="button"
+              className="hd-row hd-row-link"
+              onClick={copyPhone}
+            >
               <span className="hd-row-ico">
                 <PhoneIcon />
               </span>
@@ -92,7 +109,7 @@ export default function HelperDetail() {
                 <b>Phone number</b>
                 <span>{helper.phone}</span>
               </span>
-            </a>
+            </button>
 
             <div className="hd-row">
               <span className="hd-row-ico">
@@ -124,9 +141,9 @@ export default function HelperDetail() {
               </span>
             </div>
 
-            <a className="hd-call-btn" href={`tel:${helper.phone}`}>
-              <PhoneIcon /> Call {helper.name.split(" ")[0]}
-            </a>
+            <button type="button" className="hd-call-btn" onClick={copyPhone}>
+              <ContentCopyIcon /> Copy number
+            </button>
             <p className="hd-note">
               Working hours and price are arranged directly with the helper.
             </p>
