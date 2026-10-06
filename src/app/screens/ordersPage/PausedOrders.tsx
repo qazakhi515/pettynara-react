@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrievePausedOrders } from "./selector";
 import PaymentModal from "./PaymentModal";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, getImageUrl } from "../../../lib/config";
 import { Order, OrderItem, OrderUpdateInput } from "../../../lib/types/order";
 import { Product } from "../../../lib/types/product";
 import {
@@ -82,7 +82,7 @@ export default function PausedOrders(props: PausedOrdersProps) {
                   const product: Product = order.productData.filter(
                     (ele: Product) => item.productId === ele._id,
                   )[0];
-                  const imagePath = `${serverApi}/${product.productImages[0]}`;
+                  const imagePath = getImageUrl(product.productImages[0]);
                   return (
                     <Box key={item._id} className={"orders-name-price"}>
                       <img src={imagePath} className={"order-dish-img"} alt="" />

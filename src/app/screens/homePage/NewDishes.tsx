@@ -14,7 +14,7 @@ import { createSelector } from "reselect";
 import { retrieveNewDishes } from "./selector";
 import { setPopularDishes } from "./slice"; // bular bizni actionlarimiz
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 
 const actionDispatch = (dispatch: Dispatch) => ({
@@ -35,7 +35,7 @@ export default function NewDishes() {
             <CssVarsProvider>
               {newDishes.length !== 0 ? (
                 newDishes.map((product: Product) => {
-                  const imagePath = `${serverApi}/${product.productImages[0]}`;
+                  const imagePath = getImageUrl(product.productImages[0]);
                   const sizeVolume =
                     product.productCollection === ProductCollection.ACCESSORY
                       ? product.productVolume + "l"

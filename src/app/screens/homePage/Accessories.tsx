@@ -3,7 +3,7 @@ import { createSelector } from "reselect";
 import { useHistory } from "react-router-dom";
 import { retrieveNewDishes } from "./selector";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 
 const accessoriesRetriever = createSelector(
   retrieveNewDishes,
@@ -44,7 +44,7 @@ export default function Accessories() {
           name: item.productName,
           price: item.productPrice,
           image: item.productImages?.[0]
-            ? `${serverApi}/${item.productImages[0]}`
+            ? getImageUrl(item.productImages[0])
             : "/img/home/item1.webp",
         }))
       : MOCK_ITEMS

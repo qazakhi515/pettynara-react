@@ -9,7 +9,7 @@ import { setChosenProduct, setRestaurant } from "./slice";
 import { retrieveChosenProduct, retrieveRestaurant } from "./selector";
 import ProductService from "../../services/ProductService";
 import MemberService from "../../services/memberService";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { sweetTopSmallSuccessAlert } from "../../../lib/sweetAlert";
 import FavoriteButton from "../../components/favorite/FavoriteButton";
@@ -132,7 +132,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
 
   const images = useMemo(() => {
     if (chosenProduct?.productImages?.length)
-      return chosenProduct.productImages.map((i) => `${serverApi}/${i}`);
+      return chosenProduct.productImages.map((i) => getImageUrl(i));
     return ["/img/home/pet1.webp"];
   }, [chosenProduct]);
 
@@ -376,7 +376,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
                       style={{
                         backgroundImage: `url(${
                           p.productImages?.[0]
-                            ? `${serverApi}/${p.productImages[0]}`
+                            ? getImageUrl(p.productImages[0])
                             : "/img/home/pet1.webp"
                         })`,
                       }}
@@ -405,7 +405,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
                       style={{
                         backgroundImage: `url(${
                           p.image
-                            ? `${serverApi}/${p.image}`
+                            ? getImageUrl(p.image)
                             : "/img/home/pet1.webp"
                         })`,
                       }}
@@ -467,7 +467,7 @@ export default function ChosenProduct(props: ChosenProductProps) {
                 className="pd-seller-avatar"
                 src={
                   restaurant?.memberImage
-                    ? `${serverApi}/${restaurant.memberImage}`
+                    ? getImageUrl(restaurant.memberImage)
                     : "/icons/default-user.svg"
                 }
                 alt="seller"

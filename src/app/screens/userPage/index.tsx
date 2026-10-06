@@ -14,7 +14,7 @@ import { Settings } from "./Settings";
 import { useGlobals } from "../../components/hooks/useGlobals";
 import { useHistory } from "react-router-dom";
 import { MemberType } from "../../../lib/enums/member.enum";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import LikeService from "../../services/LikeService";
 import { Product } from "../../../lib/types/product";
 import { subscribeFavorites } from "../../components/favorite/favStore";
@@ -80,7 +80,7 @@ export default function UserPage() {
                   <img
                     src={
                       authMember?.memberImage
-                        ? `${serverApi}/${authMember.memberImage}`
+                        ? getImageUrl(authMember.memberImage)
                         : "/icons/default-user.svg"
                     }
                     alt=""
@@ -203,7 +203,7 @@ export default function UserPage() {
               <div className={"saved-grid"}>
                 {savedPets.map((p) => {
                   const img = p.productImages?.[0]
-                    ? `${serverApi}/${p.productImages[0]}`
+                    ? getImageUrl(p.productImages[0])
                     : "/img/home/item1.jpg";
                   return (
                     <div
