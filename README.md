@@ -4,6 +4,7 @@ React client for **Pettynara**, an online pet shop where customers browse pets a
 
 **Live:** [pettynara.uz](https://pettynara.uz) · **Backend repo:** [pettynara](https://github.com/qazakhi515/pettynara)
 
+[![CI](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml/badge.svg?branch=petty-mig)](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4-3178C6?logo=typescript&logoColor=white)
 ![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?logo=redux&logoColor=white)
@@ -39,6 +40,7 @@ React client for **Pettynara**, an online pet shop where customers browse pets a
 | State | Redux Toolkit with `reselect` selectors, React Context for the logged-in member |
 | Routing | React Router 5 |
 | API | Axios with cookies (`withCredentials`) |
+| Testing | Jest (via Create React App), GitHub Actions |
 | Build and deploy | Create React App, Docker multi-stage build, Nginx |
 
 ## Project structure
@@ -71,6 +73,14 @@ src/
 - **Page-level state.** Each screen owns a Redux slice and `reselect` selectors, which keeps a page's data separate from the others and avoids recomputing derived data.
 - **Caching in Nginx.** Hashed files under `/static/` are cached for a year; `index.html` is always revalidated, so a new deploy is picked up on the next page load.
 
+## Testing
+
+```bash
+yarn test --watchAll=false
+```
+
+24 unit tests cover `getImageUrl()`, the basket hook (pets stay at one, accessories stack, everything is saved to `localStorage`), shipping and totals, and phone validation. GitHub Actions runs the tests and a production build on every push and pull request. The API itself is tested in the [backend repo](https://github.com/qazakhi515/pettynara#testing).
+
 ## Getting started
 
 Requirements: Node.js 20+, Yarn, and the [backend](https://github.com/qazakhi515/pettynara) running locally.
@@ -88,7 +98,7 @@ The API URL comes from `REACT_APP_API_URL`: `.env` points to `http://localhost:3
 |---|---|
 | `yarn start` | Development server |
 | `yarn build` | Production build in `build/` |
-| `yarn test` | Tests (Jest) |
+| `yarn test` | Tests in watch mode; `yarn test --watchAll=false` runs them once |
 
 ## Deployment
 
@@ -102,7 +112,9 @@ The first stage runs `yarn build`; the second copies the static files into an `n
 
 - [ ] Move from Create React App to Vite, and to React Router 6
 - [ ] Data fetching with TanStack Query
+- [x] Unit tests for image URLs, basket, prices and phone validation, with CI
 - [ ] Component and end-to-end tests (React Testing Library, Playwright)
+- [ ] Fix the remaining ESLint warnings so CI can build with `CI=true`
 - [ ] Korean and English UI (i18n)
 - [ ] Kakao login and Toss Payments in place of the demo card form
 
