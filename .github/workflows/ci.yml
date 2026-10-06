@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [petty-mig, main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20 # same as the Docker image
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+      - run: yarn test --watchAll=false
+        env:
+          CI: true
+      # With CI=true, Create React App fails the build on ESLint warnings, and
+      # the codebase still has some. Tracked in the README roadmap.
+      - run: yarn build
+        env:
+          CI: false
