@@ -13,6 +13,14 @@ React client for **Pettynara**, an online pet shop where customers browse pets a
 > **한국어 요약**
 > Pettynara 온라인 펫샵의 프론트엔드입니다. React · TypeScript · Redux Toolkit으로 상품 목록, 상세, 장바구니, 주문, 마이페이지를 구현했습니다. 이미지는 AWS S3에서 불러오며, Docker 멀티 스테이지 빌드와 Nginx로 배포했습니다.
 
+## Screenshots
+
+![Home page with the Smart Match quiz](docs/screenshots/home.jpg)
+
+| Product list | Product detail |
+|---|---|
+| ![Product list with category filter, search and sorting](docs/screenshots/products.jpg) | ![Product detail with gallery and seller card](docs/screenshots/product-detail.jpg) |
+
 ## Features
 
 - **Home:** hero, category row, popular and new products, accessories, top members, and a **Smart Match** quiz that suggests a pet from answers about home size, experience, free time, allergies and energy level.
