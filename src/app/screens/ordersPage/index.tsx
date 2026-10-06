@@ -19,7 +19,7 @@ import { setPausedOrders, setProcessOrders, setFinishedOrders } from "./slice";
 import "../../../css/order.css";
 import { Order, OrderInquiry } from "../../../lib/types/order";
 import { OrderStatus } from "../../../lib/enums/order.enum";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, getImageUrl } from "../../../lib/config";
 import { T } from "../../../lib/types/common";
 import {
   sweetErrorHandling,
@@ -171,7 +171,7 @@ export default function OrdersPage() {
                 <img
                   src={
                     authMember?.memberImage
-                      ? `${serverApi}/${authMember.memberImage}`
+                      ? getImageUrl(authMember.memberImage)
                       : "/icons/default-user.svg"
                   }
                   className={"order-user-avatar"}

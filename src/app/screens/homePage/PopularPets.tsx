@@ -3,7 +3,7 @@ import { createSelector } from "reselect";
 import { useHistory } from "react-router-dom";
 import { retrievePopularDishes } from "./selector";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import FavoriteButton from "../../components/favorite/FavoriteButton";
 
 const popularRetriever = createSelector(
@@ -57,7 +57,7 @@ export default function PopularPets() {
           location: "Korea",
           views: pet.productViews,
           image: pet.productImages?.[0]
-            ? `${serverApi}/${pet.productImages[0]}`
+            ? getImageUrl(pet.productImages[0])
             : "/img/home/pet1.webp",
           flag: "Verified",
         }))

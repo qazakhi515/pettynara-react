@@ -9,7 +9,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { CartItem } from "../../../lib/types/search";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, getImageUrl } from "../../../lib/config";
 import { calcTotals } from "../../../lib/utils/price";
 import { isUniquePet } from "../../../lib/utils/cart";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
@@ -147,7 +147,7 @@ export default function CheckoutPage(props: CheckoutPageProps) {
             <Box className={"checkout-lines"}>
               {items.map((item: CartItem) => {
                 const imagePath = item.image
-                  ? `${serverApi}/${item.image}`
+                  ? getImageUrl(item.image)
                   : "/img/home/pet1.webp";
                 return (
                   <Box className={"checkout-line"} key={item._id}>
@@ -252,7 +252,7 @@ export default function CheckoutPage(props: CheckoutPageProps) {
               <img
                 src={
                   authMember?.memberImage
-                    ? `${serverApi}/${authMember.memberImage}`
+                    ? getImageUrl(authMember.memberImage)
                     : "/icons/default-user.svg"
                 }
                 className={"checkout-user-avatar"}

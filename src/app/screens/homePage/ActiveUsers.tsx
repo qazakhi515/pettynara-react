@@ -8,7 +8,7 @@ import Typography from "@mui/joy/Typography";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrieveTopUsers } from "./selector";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import { Member } from "../../../lib/types/member";
 
 const topUsersRetriever = createSelector(retrieveTopUsers, (topUsers) => ({
@@ -25,7 +25,7 @@ export default function ActiveUsers() {
             <CssVarsProvider>
               {topUsers.length !== 0 ? (
                 topUsers.map((member: Member) => {
-                  const imagePath = `${serverApi}/${member.memberImage}`;
+                  const imagePath = getImageUrl(member.memberImage);
                   return (
                     <Card
                       key={member._id}

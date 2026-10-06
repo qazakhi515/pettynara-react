@@ -12,7 +12,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { collectionIsActive } from "../../../lib/utils/nav";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../hooks/useGlobals";
 import Basket from "./Basket";
@@ -146,7 +146,7 @@ export default function OtherNavbar(props: OtherNavbarProps) {
               className="user-avatar"
               src={
                 authMember?.memberImage
-                  ? `${serverApi}/${authMember?.memberImage}`
+                  ? getImageUrl(authMember?.memberImage)
                   : "/icons/default-user.svg"
               }
               alt="profile"

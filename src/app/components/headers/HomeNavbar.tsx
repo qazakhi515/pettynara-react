@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { collectionIsActive } from "../../../lib/utils/nav";
-import { serverApi } from "../../../lib/config";
+import { getImageUrl } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../hooks/useGlobals";
 import Basket from "./Basket";
@@ -144,7 +144,7 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               className="user-avatar"
               src={
                 authMember?.memberImage
-                  ? `${serverApi}/${authMember?.memberImage}`
+                  ? getImageUrl(authMember?.memberImage)
                   : "/icons/default-user.svg"
               }
               alt="profile"

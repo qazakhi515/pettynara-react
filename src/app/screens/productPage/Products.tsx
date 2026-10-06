@@ -10,7 +10,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { useDispatch, useSelector } from "react-redux";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, getImageUrl } from "../../../lib/config";
 import { useHistory, useLocation } from "react-router-dom";
 import { CartItem } from "../../../lib/types/search";
 import { sweetFailureProvider } from "../../../lib/sweetAlert";
@@ -268,7 +268,7 @@ export default function Products(props: ProductsProps) {
             {displayed.length !== 0 ? (
               displayed.map((product) => {
                 const imagePath = product.productImages?.[0]
-                  ? `${serverApi}/${product.productImages[0]}`
+                  ? getImageUrl(product.productImages[0])
                   : "/img/home/pet1.webp";
                 const flag = product.productViews > 0 ? "Popular" : "New";
                 return (
