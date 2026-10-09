@@ -5,6 +5,7 @@ import {
   OrderInquiry,
   OrderItemInput,
   OrderUpdateInput,
+  PaymentConfirmInput,
 } from "../../lib/types/order";
 import { CartItem } from "../../lib/types/search";
 
@@ -61,6 +62,18 @@ class OrderService {
       return result.data;
     } catch (err) {
       console.log("Error. updateOrder:", err);
+      throw err;
+    }
+  }
+
+  /** Asks the server to confirm a Toss payment and mark the order paid. */
+  public async confirmPayment(input: PaymentConfirmInput): Promise<Order> {
+    try {
+      const url = `${this.path}/order/confirm-payment`;
+      const result = await axios.post(url, input, { withCredentials: true });
+      return result.data;
+    } catch (err) {
+      console.log("Error. confirmPayment:", err);
       throw err;
     }
   }

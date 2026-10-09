@@ -56,20 +56,6 @@ export default function PausedOrders(props: PausedOrdersProps) {
     }
   };
 
-  // called by the payment modal once the card form is filled in
-  const processOrderHandler = async (orderId: string) => {
-    if (!authMember) throw new Error(Messages.error2);
-    const input: OrderUpdateInput = {
-      orderId: orderId,
-      orderStatus: OrderStatus.PROCESS,
-    };
-
-    const order = new OrderService();
-    await order.updateOrder(input);
-    setValue("2");
-    setOrderBuilder(new Date());
-  };
-
   return (
     <TabPanel value={"1"}>
       <Stack>
@@ -149,7 +135,6 @@ export default function PausedOrders(props: PausedOrdersProps) {
         open={!!payOrder}
         order={payOrder}
         onClose={() => setPayOrder(null)}
-        onConfirm={processOrderHandler}
       />
     </TabPanel>
   );

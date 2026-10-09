@@ -11,6 +11,7 @@ import Footer from "./components/footer";
 import HelpPage from "./screens/helpPage";
 import HelpersPage from "./screens/helpersPage";
 import HelperDetail from "./screens/helpersPage/HelperDetail";
+import PaymentResultPage from "./screens/paymentPage";
 import useBasket from "./components/hooks/useBasket";
 import AuthenticationModal from "./components/auth";
 import "../css/app.css";
@@ -116,6 +117,9 @@ function App() {
         </Route>
         <Route path="/orders">
           <OrdersPage />
+        </Route>
+        <Route path="/payment/:outcome(success|fail)">
+          <PaymentResultPage />
         </Route>
         <Route path="/member-page">
           <UserPage />

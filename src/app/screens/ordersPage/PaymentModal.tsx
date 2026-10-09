@@ -1,114 +1,111 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Backdrop, Box, Fade, Modal, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import LockIcon from "@mui/icons-material/Lock";
-import { Messages } from "../../../lib/config";
-import { Order } from "../../../lib/types/order";
-import { T } from "../../../lib/types/common";
 import {
-  DEMO_CARD_CVV,
-  DEMO_CARD_EXPIRY,
-  DEMO_CARD_NUMBER,
-  digitsOnly,
-  formatCardNumber,
-  formatExpiry,
-  maskCard,
-  readSavedCard,
-  saveCard,
-} from "../../../lib/utils/card";
+  ANONYMOUS,
+  loadTossPayments,
+  TossPaymentsWidgets,
+} from "@tosspayments/tosspayments-sdk";
+import { Messages, tossClientKey } from "../../../lib/config";
+import { Order } from "../../../lib/types/order";
+import { Product } from "../../../lib/types/product";
 import "../../../css/pettynara-payment.css";
 
 interface PaymentModalProps {
   open: boolean;
   order: Order | null;
   onClose: () => void;
-  /** the API call lives in the parent — this modal only collects the card */
-  onConfirm: (orderId: string) => Promise<void>;
 }
 
-export default function PaymentModal(props: PaymentModalProps) {
-  const { open, order, onClose, onConfirm } = props;
+/**
+ * The Toss orderId for one payment attempt: our order id plus a random suffix,
+ * so a buyer who closes the payment window can try again. The server reads
+ * the order id back from the part before "_".
+ */
+const makeTossOrderId = (orderId: string) =>
+  `${orderId}_${Math.random().toString(36).slice(2, 10)}`;
 
-  const [cardNumber, setCardNumber] = useState<string>("");
-  const [expiry, setExpiry] = useState<string>("");
-  const [cvv, setCvv] = useState<string>("");
-  const [holder, setHolder] = useState<string>("");
-  const [remember, setRemember] = useState<boolean>(true);
+/** "Bichon" or "Bichon 외 2건", the way Korean checkouts name an order. */
+const makeOrderName = (order: Order): string => {
+  const first: Product | undefined = order.productData?.[0];
+  const name = first?.productName ?? "Pettynara order";
+  const others = (order.orderItems?.length ?? 1) - 1;
+  return others > 0 ? `${name} 외 ${others}건` : name;
+};
+
+/**
+ * Toss Payments widget for one unpaid order. Paying redirects to Toss and then
+ * to /payment/success, where the server confirms the payment; nothing is
+ * charged in this component.
+ */
+export default function PaymentModal(props: PaymentModalProps) {
+  const { open, order, onClose } = props;
+  const widgetsRef = useRef<TossPaymentsWidgets | null>(null);
+  const [ready, setReady] = useState<boolean>(false);
   const [paying, setPaying] = useState<boolean>(false);
   // shown inside the modal: a SweetAlert would render behind the MUI backdrop
   const [error, setError] = useState<string>("");
 
-  const savedCard = readSavedCard();
-
-  // reset on every open: the number and the CVV are never pre-filled, only the
-  // two harmless fields come back from the saved card
   useEffect(() => {
-    if (!open) return;
-    const saved = readSavedCard();
-    setCardNumber("");
-    setCvv("");
-    setExpiry(saved?.expiry ?? "");
-    setHolder(saved?.holder ?? "");
+    if (!open || !order) return;
+    let cancelled = false;
+    setReady(false);
     setPaying(false);
     setError("");
-  }, [open]);
 
-  /** HANDLERS **/
-  const handleCardNumber = (e: T) => {
-    setError("");
-    setCardNumber(formatCardNumber(e.target.value));
-  };
-  const handleExpiry = (e: T) => setExpiry(formatExpiry(e.target.value));
-  const handleCvv = (e: T) =>
-    setCvv(e.target.value.replace(/\D/g, "").slice(0, 4));
-  const handleHolder = (e: T) => {
-    setError("");
-    setHolder(e.target.value);
-  };
+    const render = async () => {
+      try {
+        if (!tossClientKey) throw new Error("Payment is not configured");
+        const tossPayments = await loadTossPayments(tossClientKey);
+        const widgets = tossPayments.widgets({ customerKey: ANONYMOUS });
+        // The amount must be set before the payment UI is rendered.
+        await widgets.setAmount({ currency: "KRW", value: order.orderTotal });
+        if (cancelled) return;
+        await Promise.all([
+          widgets.renderPaymentMethods({
+            selector: "#toss-payment-methods",
+            variantKey: "DEFAULT",
+          }),
+          widgets.renderAgreement({ selector: "#toss-agreement" }),
+        ]);
+        if (cancelled) return;
+        widgetsRef.current = widgets;
+        setReady(true);
+      } catch (err: any) {
+        console.log("Toss widget failed:", err);
+        if (!cancelled) setError(err?.message ?? Messages.error1);
+      }
+    };
+    // The modal mounts its content in a portal; wait one frame for the
+    // selectors above to exist.
+    const frame = requestAnimationFrame(() => void render());
 
-  const useDemoCardHandler = () => {
-    setError("");
-    setCardNumber(DEMO_CARD_NUMBER);
-    setExpiry(DEMO_CARD_EXPIRY);
-    setCvv(DEMO_CARD_CVV);
-    if (holder === "") setHolder("DEMO USER");
-  };
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      widgetsRef.current = null;
+    };
+  }, [open, order]);
 
   const payHandler = async () => {
-    if (!order || paying) return;
-
-    // This is a demo checkout — nothing is charged and no card data is sent
-    // anywhere, so an incomplete form must never block the order. Whatever is
-    // missing simply falls back to the demo card instead of raising an error.
-    // (The number input strips non-digits, so typing e.g. "demo" leaves it
-    // empty — that used to dead-end here with a validation message.)
-    const payCard =
-      digitsOnly(cardNumber).length >= 4 ? cardNumber : DEMO_CARD_NUMBER;
-    const payExpiry = expiry.trim() !== "" ? expiry : DEMO_CARD_EXPIRY;
-    const payHolder = holder.trim() !== "" ? holder : "DEMO USER";
-
-    // reflect the substitution in the form so the user sees what was charged
-    setCardNumber(payCard);
-    setExpiry(payExpiry);
-    setHolder(payHolder);
-
+    const widgets = widgetsRef.current;
+    if (!order || !widgets || paying) return;
     try {
       setPaying(true);
       setError("");
-      // only the holder, the expiry and the last 4 digits are kept
-      if (remember) saveCard(payHolder, payExpiry, payCard);
-
-      await onConfirm(order._id);
-      onClose();
+      await widgets.requestPayment({
+        orderId: makeTossOrderId(order._id),
+        orderName: makeOrderName(order),
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
+      });
     } catch (err: any) {
+      // Closing the Toss window lands here too; the order stays unpaid.
       setPaying(false);
-      console.log("payment failed:", err);
-      // the error has to be rendered in the modal — a SweetAlert would open
-      // behind the MUI backdrop and the user would see nothing happen
-      setError(
-        err?.response?.data?.message ?? err?.message ?? Messages.error1,
-      );
+      console.log("Toss requestPayment:", err);
+      setError(err?.message ?? Messages.error1);
     }
   };
 
@@ -132,74 +129,13 @@ export default function PaymentModal(props: PaymentModalProps) {
 
           <Box className={"pay-notice"}>
             <span>
-              ⚠️ Demo payment — no money moves and nothing is sent to a server.
-              Please do <b>not</b> enter a real card. Leave the fields blank (or
-              hit the button below) and the demo card is used automatically.
+              ⚠️ Test mode — Toss Payments test keys are used, so no money
+              moves. Pick any payment method and follow the test screens.
             </span>
-            <button className={"pay-demo-btn"} onClick={useDemoCardHandler}>
-              Use demo card
-            </button>
           </Box>
 
-          <Box className={"pay-field"}>
-            <label>Card number</label>
-            <input
-              className={"pay-input"}
-              value={cardNumber}
-              onChange={handleCardNumber}
-              autoComplete="off"
-              inputMode="numeric"
-              placeholder={
-                savedCard ? maskCard(savedCard.last4) : "0000 0000 0000 0000"
-              }
-            />
-          </Box>
-
-          <Box className={"pay-row"}>
-            <Box className={"pay-field"}>
-              <label>Expiry</label>
-              <input
-                className={"pay-input"}
-                value={expiry}
-                onChange={handleExpiry}
-                autoComplete="off"
-                inputMode="numeric"
-                placeholder="MM/YY"
-              />
-            </Box>
-            <Box className={"pay-field"}>
-              <label>CVV</label>
-              <input
-                className={"pay-input"}
-                type="password"
-                value={cvv}
-                onChange={handleCvv}
-                autoComplete="off"
-                inputMode="numeric"
-                placeholder="•••"
-              />
-            </Box>
-          </Box>
-
-          <Box className={"pay-field"}>
-            <label>Cardholder name</label>
-            <input
-              className={"pay-input"}
-              value={holder}
-              onChange={handleHolder}
-              autoComplete="off"
-              placeholder="AKHMADJON USMONOV"
-            />
-          </Box>
-
-          <label className={"pay-remember"}>
-            <input
-              type="checkbox"
-              checked={remember}
-              onChange={(e) => setRemember(e.target.checked)}
-            />
-            <span>Remember this card (name, expiry and last 4 digits only)</span>
-          </label>
+          <div id="toss-payment-methods" />
+          <div id="toss-agreement" />
 
           {error !== "" && <Box className={"pay-error"}>⚠️ {error}</Box>}
 
@@ -207,13 +143,17 @@ export default function PaymentModal(props: PaymentModalProps) {
             variant={"contained"}
             className={"pay-submit"}
             onClick={payHandler}
-            disabled={paying}
+            disabled={!ready || paying}
           >
-            {paying ? "Processing…" : `Pay ₩${order?.orderTotal ?? 0}`}
+            {paying
+              ? "Processing…"
+              : ready
+                ? `Pay ₩${order?.orderTotal ?? 0}`
+                : "Loading payment methods…"}
           </Button>
 
           <Box className={"pay-foot"}>
-            <LockIcon /> Card details never leave this browser
+            <LockIcon /> Payments are processed by Toss Payments
           </Box>
         </Stack>
       </Fade>

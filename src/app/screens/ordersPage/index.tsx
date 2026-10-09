@@ -48,7 +48,10 @@ export default function OrdersPage() {
   const { setPausedOrders, setProcessOrders, setFinishedOrders } =
     actionDispatch(useDispatch());
   const { orderBuilder, authMember } = useGlobals();
-  const [value, setValue] = useState("1");
+  // /payment/success links here with ?tab=2 to show the order just paid.
+  const [value, setValue] = useState(
+    () => new URLSearchParams(window.location.search).get("tab") ?? "1",
+  );
   const [orderInquiry] = useState<OrderInquiry>({
     page: 1,
     limit: 5,

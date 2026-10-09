@@ -239,3 +239,35 @@
     flex-direction: column;
   }
 }
+
+/* Toss Payments result page (/payment/success, /payment/fail) */
+.pay-result {
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.pay-result-card {
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 28px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.pay-result-card h2 {
+  margin: 0;
+}
+
+.pay-result-card p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.pay-result-icon {
+  font-size: 48px;
+}
