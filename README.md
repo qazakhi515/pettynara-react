@@ -4,7 +4,7 @@ React client for **Pettynara**, an online pet shop where customers browse pets a
 
 **Live:** [pettynara.uz](https://pettynara.uz) · **Backend repo:** [pettynara](https://github.com/qazakhi515/pettynara)
 
-[![CI](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml/badge.svg?branch=petty-mig)](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml)
+[![CI](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/qazakhi515/pettynara-react/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4-3178C6?logo=typescript&logoColor=white)
 ![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?logo=redux&logoColor=white)
