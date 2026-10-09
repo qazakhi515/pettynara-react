@@ -36,6 +36,13 @@ export interface OrderInquiry {
   orderStatus: OrderStatus;
 }
 
+/** What Toss appends to successUrl, passed on to the server to confirm. */
+export interface PaymentConfirmInput {
+  paymentKey: string;
+  orderId: string;
+  amount: number;
+}
+
 export interface OrderUpdateInput {
   orderId: string;
   orderStatus: OrderStatus;
